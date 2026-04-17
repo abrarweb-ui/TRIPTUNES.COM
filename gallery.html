@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery | Kashmir Travel Photos | Trip Tunes Tour and Travels</title>
+  <meta name="description" content="Browse photos of Kashmir — Dal Lake, houseboats, Gulmarg, Pahalgam, Sonamarg, and more from Trip Tunes Tour and Travels.">
+  <link rel="canonical" href="https://triptunes.com/gallery.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <h1>Photo Gallery</h1>
+    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Gallery</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header centered">
+      <p class="section-label">Kashmir Through Our Lens</p>
+      <h2>Glimpses of the Valley</h2>
+      <div class="divider centered"></div>
+      <p style="margin-top:14px;">A small collection of Kashmir's beauty — from the serenity of Dal Lake to the snow peaks of Gulmarg.</p>
+    </div>
+
+    <div id="gallery-dynamic" style="display:none;">
+      <!-- Firestore images will be loaded here -->
+    </div>
+
+    <!-- Static gallery (fallback and always shown if DB empty) -->
+    <div id="gallery-static" class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1614799040700-0a6f1f5d4c0a?w=700&q=80" alt="Dal Lake Srinagar Kashmir houseboat" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1506461883276-594a12b5bca3?w=700&q=80" alt="Kashmir valley scenic mountains" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1624979413609-9eaf0f94e800?w=700&q=80" alt="Gulmarg meadows Kashmir" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1585531943718-89dc7bc34d45?w=700&q=80" alt="Pahalgam Lidder valley Kashmir" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1591135456609-8a8e855e7e67?w=700&q=80" alt="Tulip Garden Srinagar Kashmir spring" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Shikara ride Dal Lake Kashmir sunset" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=700&q=80" alt="Kashmir cab rental mountain road trip" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&q=80" alt="Hotel view Kashmir lake" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=700&q=80" alt="Group tour Kashmir travel" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=80" alt="Sonamarg glacier Kashmir mountains" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=700&q=80" alt="Kashmir nature travel landscape" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=700&q=80" alt="Kashmir transport travel vehicle" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <h2>Experience Kashmir Yourself</h2>
+    <p>Every photo tells a story. Let us help you create your own Kashmir memories.</p>
+    <div class="cta-actions">
+      <a href="tours.html" class="btn btn-gold">View Packages</a>
+      <a href="contact.html" class="btn btn-outline-white">Plan Your Trip</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/partials.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const snap = await db.collection('gallery').get();
+    if (!snap.empty) {
+      const dynEl = document.getElementById('gallery-dynamic');
+      const staticEl = document.getElementById('gallery-static');
+      dynEl.className = 'gallery-grid';
+      dynEl.style.display = '';
+      staticEl.style.display = 'none';
+      snap.forEach(doc => {
+        const { image } = doc.data();
+        if (image) {
+          const div = document.createElement('div');
+          div.className = 'gallery-item';
+          div.innerHTML = `<img src="${image}" alt="Kashmir travel photo" loading="lazy" onerror="this.parentElement.style.display='none'">`;
+          dynEl.appendChild(div);
+        }
+      });
+      if (dynEl.children.length === 0) {
+        dynEl.style.display = 'none';
+        staticEl.style.display = '';
+      }
+    }
+  } catch (e) {
+    console.log('Firebase not configured. Static gallery shown.');
+  }
+});
+</script>
+</body>
+</html>

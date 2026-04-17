@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Tunes Tour and Travels | Kashmir Travel Agency | Srinagar & Budgam</title>
+  <meta name="description" content="Trip Tunes Tour and Travels — a trusted Kashmir travel agency based in Budgam, Srinagar. Book Kashmir tour packages, houseboat bookings, cab rentals, honeymoon packages, and family trips.">
+  <meta name="keywords" content="Kashmir travel agency, Srinagar travel agency, Budgam travel agency, Kashmir tour packages, houseboat booking Srinagar, cab rental Kashmir">
+  <link rel="canonical" href="https://triptunes.com/index.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Trip Tunes Tour and Travels | Your Trusted Kashmir Travel Partner">
+  <meta property="og:description" content="Book Kashmir tour packages, houseboats, cab rentals and more with a local Srinagar travel agency you can trust.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://triptunes.com/">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1506461883276-594a12b5bca3?w=1200&q=80">
+
+  <!-- Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["TravelAgency", "LocalBusiness"],
+    "name": "Trip Tunes Tour and Travels",
+    "url": "https://triptunes.com",
+    "logo": "https://triptunes.com/logo.png",
+    "description": "Kashmir travel agency offering tour packages, houseboat bookings, cab rentals, and more.",
+    "telephone": ["+918082227879", "+917889847522"],
+    "email": "triptunes5@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Safvi Galleria, New Bus Stand Budgam",
+      "addressLocality": "Srinagar",
+      "addressRegion": "Jammu & Kashmir",
+      "postalCode": "191111",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 33.7398,
+      "longitude": 74.7942
+    },
+    "openingHours": "Mo-Su 09:00-19:00",
+    "sameAs": ["https://wa.me/918082227879"]
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Header -->
+<div id="site-header"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" aria-label="Welcome to Trip Tunes">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <p class="hero-label">Kashmir's Trusted Travel Partner</p>
+        <h1>Plan Your Perfect Kashmir Journey With Us</h1>
+        <p class="hero-desc">
+          Based in Budgam, Srinagar — we are a local travel agency that personally arranges every detail of your Kashmir trip. From Dal Lake houseboats to Gulmarg snowfields, we know this valley like home.
+        </p>
+        <div class="hero-actions">
+          <a href="tours.html" class="btn btn-gold">Explore Packages</a>
+          <a href="contact.html" class="btn btn-outline-white">Get in Touch</a>
+        </div>
+        <div class="hero-trust">
+          <div class="hero-stat"><strong>500+</strong><span>Trips Completed</span></div>
+          <div class="hero-stat"><strong>7+</strong><span>Years in Kashmir</span></div>
+          <div class="hero-stat"><strong>100%</strong><span>Local Expertise</span></div>
+          <div class="hero-stat"><strong>24/7</strong><span>Support</span></div>
+        </div>
+      </div>
+
+      <!-- Quick Inquiry Form -->
+      <div class="hero-card">
+        <h3>Quick Inquiry</h3>
+        <div id="hero-form-msg"></div>
+        <div class="form-group">
+          <label for="hf-name">Your Name</label>
+          <input type="text" id="hf-name" placeholder="Enter your name" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="hf-phone">Phone Number</label>
+          <input type="tel" id="hf-phone" placeholder="+91 98765 43210" autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label for="hf-package">Package Interest</label>
+          <select id="hf-package">
+            <option value="">Select a package</option>
+            <option>Family Kashmir Package</option>
+            <option>Honeymoon Package</option>
+            <option>Srinagar Local Tour</option>
+            <option>Gulmarg Tour</option>
+            <option>Pahalgam Tour</option>
+            <option>Sonamarg Tour</option>
+            <option>Cab Rental</option>
+            <option>Custom Package</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="hf-msg">Message (optional)</label>
+          <textarea id="hf-msg" placeholder="Travel dates, group size, any questions..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="submitHeroForm()">Send Inquiry</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST BAR ============ -->
+<div class="trust-bar">
+  <div class="container">
+    <div class="trust-bar-inner">
+      <div class="trust-item"><strong>500+</strong><span>Happy Travellers</span></div>
+      <div class="trust-item"><strong>7+</strong><span>Years of Service</span></div>
+      <div class="trust-item"><strong>15+</strong><span>Tour Packages</span></div>
+      <div class="trust-item"><strong>Budgam</strong><span>Based & Born in Kashmir</span></div>
+      <div class="trust-item"><strong>24/7</strong><span>Customer Support</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ INTRODUCTION ============ -->
+<section class="section" style="background: var(--off-white);">
+  <div class="container">
+    <div class="why-grid">
+      <div>
+        <p class="section-label">Who We Are</p>
+        <h2>A Kashmir Travel Agency That Knows This Valley Personally</h2>
+        <div class="divider"></div>
+        <p style="margin-top:18px;">
+          Trip Tunes Tour and Travels is a locally run travel agency based in Budgam, near Srinagar. We have been helping families, couples, and groups explore Kashmir for over seven years. Every route we suggest, every hotel we recommend — we have been there ourselves.
+        </p>
+        <p style="margin-top:12px;">
+          We handle hotel reservations, houseboat bookings on Dal Lake, private cab rentals, and complete tour packages for all budgets. Our team is available on call and WhatsApp, so you are never alone during your trip.
+        </p>
+        <div style="margin-top:24px; display:flex; gap:14px; flex-wrap:wrap;">
+          <a href="about.html" class="btn btn-primary">Our Story</a>
+          <a href="contact.html" class="btn btn-outline">Talk to Us</a>
+        </div>
+      </div>
+      <div class="why-img">
+        <img src="https://images.unsplash.com/photo-1614799040700-0a6f1f5d4c0a?w=800&q=80"
+             alt="Dal Lake Srinagar Kashmir houseboat view" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES OVERVIEW ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header centered">
+      <p class="section-label">What We Offer</p>
+      <h2>Our Services</h2>
+      <div class="divider centered"></div>
+      <p style="margin-top:14px;">From a single cab booking to a fully arranged Kashmir tour — we handle it all, locally and personally.</p>
+    </div>
+    <div class="grid-3">
+      <div class="service-card">
+        <div class="service-icon">🏨</div>
+        <h3>Hotel Reservation</h3>
+        <p>We book hotels across Srinagar, Gulmarg, Pahalgam, and Sonamarg at rates that match your budget — from budget stays to premium properties.</p>
+        <a href="services.html#hotel" style="font-size:0.86rem;color:var(--sky-blue);margin-top:10px;display:inline-block;font-weight:600;">Learn more →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🛶</div>
+        <h3>Houseboat Bookings</h3>
+        <p>Experience life on Dal Lake with our curated houseboat stays. We work with trusted, well-maintained houseboats in prime locations.</p>
+        <a href="services.html#houseboat" style="font-size:0.86rem;color:var(--sky-blue);margin-top:10px;display:inline-block;font-weight:600;">Learn more →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🚗</div>
+        <h3>Cab Rental</h3>
+        <p>Clean, reliable vehicles with experienced local drivers. Airport transfers, local sightseeing, or multi-day outstation trips across Kashmir.</p>
+        <a href="cabs.html" style="font-size:0.86rem;color:var(--sky-blue);margin-top:10px;display:inline-block;font-weight:600;">View cabs →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">👨‍👩‍👧‍👦</div>
+        <h3>Family Trips</h3>
+        <p>Carefully planned family itineraries with comfortable transport, family-friendly hotels, and guidance at every step.</p>
+        <a href="services.html#family" style="font-size:0.86rem;color:var(--sky-blue);margin-top:10px;display:inline-block;font-weight:600;">Learn more →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💑</div>
+        <h3>Couple & Honeymoon</h3>
+        <p>Romantic Kashmir experiences — Shikara rides, garden visits, mountain sunsets, and cosy accommodation for newlyweds and couples.</p>
+        <a href="services.html#honeymoon" style="font-size:0.86rem;color:var(--sky-blue);margin-top:10px;display:inline-block;font-weight:600;">Learn more →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">👥</div>
+        <h3>Group Bookings</h3>
+        <p>Special group rates for large families, corporate groups, college tours, and pilgrimages. We manage logistics so you enjoy the trip.</p>
+        <a href="services.html#group" style="font-size:0.86rem;color:var(--sky-blue);margin-top:10px;display:inline-block;font-weight:600;">Learn more →</a>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:36px;">
+      <a href="services.html" class="btn btn-outline">View All Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED PACKAGES ============ -->
+<section class="section" style="background: var(--off-white); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="section-header centered">
+      <p class="section-label">Popular Packages</p>
+      <h2>Kashmir Tour Packages</h2>
+      <div class="divider centered"></div>
+      <p style="margin-top:14px;">A few of our most-loved packages. All itineraries are flexible and can be adjusted to your travel dates and preferences.</p>
+    </div>
+    <div class="grid-3" id="featured-tours">
+      <!-- Static fallback cards if Firebase isn't loaded -->
+      <div class="card tour-card">
+        <span class="highlight-tag">Popular</span>
+        <img class="card-img" src="https://images.unsplash.com/photo-1591135456609-8a8e855e7e67?w=600&q=75" alt="Family Kashmir Tour Package" loading="lazy">
+        <div class="card-body">
+          <h3>Family Kashmir Package</h3>
+          <p>Srinagar, Gulmarg, Pahalgam — a well-paced 6-night family itinerary covering the best of Kashmir.</p>
+          <ul class="highlights-list">
+            <li>Dal Lake Shikara ride</li>
+            <li>Gulmarg Gondola experience</li>
+            <li>Pahalgam valley walk</li>
+            <li>Mughal Garden visits</li>
+          </ul>
+          <div class="card-meta">
+            <div class="price-tag">Contact for Price <small>/ person</small></div>
+            <span class="badge">6N / 7D</span>
+          </div>
+          <a href="#" onclick="whatsappInquiry('Family Kashmir Package'); return false;" class="btn btn-primary btn-sm" style="margin-top:14px;display:block;text-align:center;">Inquire on WhatsApp</a>
+        </div>
+      </div>
+      <div class="card tour-card">
+        <span class="highlight-tag badge-gold">Honeymoon</span>
+        <img class="card-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75" alt="Honeymoon Package Kashmir" loading="lazy">
+        <div class="card-body">
+          <h3>Kashmir Honeymoon Package</h3>
+          <p>A romantic getaway crafted for newlyweds — private shikara rides, mountain views, and premium stays.</p>
+          <ul class="highlights-list">
+            <li>Houseboat on Dal Lake</li>
+            <li>Private Shikara at sunset</li>
+            <li>Sonamarg day excursion</li>
+            <li>Rose garden visit</li>
+          </ul>
+          <div class="card-meta">
+            <div class="price-tag">Contact for Price <small>/ couple</small></div>
+            <span class="badge">4N / 5D</span>
+          </div>
+          <a href="#" onclick="whatsappInquiry('Kashmir Honeymoon Package'); return false;" class="btn btn-primary btn-sm" style="margin-top:14px;display:block;text-align:center;">Inquire on WhatsApp</a>
+        </div>
+      </div>
+      <div class="card tour-card">
+        <img class="card-img" src="https://images.unsplash.com/photo-1624979413609-9eaf0f94e800?w=600&q=75" alt="Gulmarg Tour Package Kashmir" loading="lazy">
+        <div class="card-body">
+          <h3>Gulmarg Tour</h3>
+          <p>The meadow of flowers — Gulmarg offers the highest gondola in Asia, skiing, and stunning meadow views.</p>
+          <ul class="highlights-list">
+            <li>Gondola Phase 1 & 2</li>
+            <li>Khilanmarg meadow</li>
+            <li>Snow activities (winter)</li>
+            <li>Gulmarg Golf Course</li>
+          </ul>
+          <div class="card-meta">
+            <div class="price-tag">Contact for Price <small>/ person</small></div>
+            <span class="badge">2N / 3D</span>
+          </div>
+          <a href="#" onclick="whatsappInquiry('Gulmarg Tour'); return false;" class="btn btn-primary btn-sm" style="margin-top:14px;display:block;text-align:center;">Inquire on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:36px;">
+      <a href="tours.html" class="btn btn-gold">View All Packages</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY CHOOSE US ============ -->
+<section class="section">
+  <div class="container">
+    <div class="why-grid">
+      <div class="why-img">
+        <img src="https://images.unsplash.com/photo-1585531943718-89dc7bc34d45?w=800&q=80" alt="Kashmir valley Pahalgam nature view" loading="lazy">
+      </div>
+      <div>
+        <p class="section-label">Why Choose Us</p>
+        <h2>Local Knowledge Makes All the Difference</h2>
+        <div class="divider"></div>
+        <p style="margin-top:16px;">We are not a booking portal — we are a team of people who live here, know every road, and care that your trip goes well.</p>
+        <div class="why-list">
+          <div class="why-item">
+            <div class="why-num">1</div>
+            <div>
+              <h4>Locally Based in Budgam, Srinagar</h4>
+              <p>Our office is at Safvi Galleria, New Bus Stand Budgam. Walk in, call, or WhatsApp us anytime.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">2</div>
+            <div>
+              <h4>Honest Pricing, No Hidden Charges</h4>
+              <p>We give you a clear price before you book. What we quote is what you pay — no surprises on the ground.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">3</div>
+            <div>
+              <h4>Personal Attention to Every Trip</h4>
+              <p>From your first call to your return journey, we stay in touch and make sure everything goes smoothly.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">4</div>
+            <div>
+              <h4>Trusted by Families, Couples & Groups</h4>
+              <p>Over 500 travellers have trusted us with their Kashmir trip. We take that responsibility seriously.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAB HIGHLIGHT ============ -->
+<section class="section-sm" style="background: var(--off-white); border-top:1px solid var(--border);">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+      <div>
+        <p class="section-label">Cab Rental</p>
+        <h2>Reliable Transport Across Kashmir</h2>
+        <div class="divider"></div>
+        <p style="margin-top:16px;">Our fleet includes Sedans, Innova Crystas, Tempo Travellers, and Mini Coaches. All vehicles are clean, insured, and driven by experienced local drivers who know Kashmir's roads.</p>
+        <ul class="why-list" style="margin-top:18px;">
+          <div class="why-item"><div class="why-num" style="background:var(--gold);">✓</div><div><h4>Airport Pickup & Drop</h4><p>Available at Srinagar airport at any hour.</p></div></div>
+          <div class="why-item"><div class="why-num" style="background:var(--gold);">✓</div><div><h4>Local & Outstation Trips</h4><p>Gulmarg, Pahalgam, Sonamarg, Yusmarg, and more.</p></div></div>
+          <div class="why-item"><div class="why-num" style="background:var(--gold);">✓</div><div><h4>Group Transport</h4><p>Large vehicles for families and group tours.</p></div></div>
+        </ul>
+        <a href="cabs.html" class="btn btn-primary" style="margin-top:22px;">View Cab Options</a>
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=700&q=80" alt="Cab rental Kashmir Innova Crysta" loading="lazy" style="border-radius:6px;width:100%;height:320px;object-fit:cover;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOCAL PRESENCE ============ -->
+<section class="section local-section">
+  <div class="container">
+    <div class="local-inner">
+      <div>
+        <p class="section-label">Our Location</p>
+        <h2>Find Us in Budgam, Srinagar</h2>
+        <div class="divider"></div>
+        <p style="margin-top:16px;">We have a physical office at Safvi Galleria, New Bus Stand Budgam — you can walk in to discuss your trip, ask questions, or make a booking in person.</p>
+        <div class="contact-info-box" style="margin-top:24px;background:var(--white);">
+          <div class="info-row">
+            <span class="icon">📍</span>
+            <div><strong>Address</strong>Safvi Galleria, New Bus Stand Budgam, Srinagar, J&K</div>
+          </div>
+          <div class="info-row">
+            <span class="icon">📞</span>
+            <div><strong>Phone</strong><a href="tel:8082227879">8082227879</a> &nbsp;/&nbsp; <a href="tel:7889847522">7889847522</a></div>
+          </div>
+          <div class="info-row">
+            <span class="icon">✉️</span>
+            <div><strong>Email</strong><a href="mailto:triptunes5@gmail.com">triptunes5@gmail.com</a></div>
+          </div>
+          <div class="info-row">
+            <span class="icon">🕐</span>
+            <div><strong>Working Hours</strong>Monday to Sunday, 9:00 AM – 7:00 PM</div>
+          </div>
+        </div>
+        <a href="https://wa.me/918082227879?text=Hi%2C%20I%20want%20to%20visit%20your%20Budgam%20office." class="btn btn-whatsapp" target="_blank" style="margin-top:4px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+          WhatsApp Us
+        </a>
+      </div>
+      <div class="map-placeholder">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3300.7!2d74.7942!3d33.7398!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDQ0JzIzLjMiTiA3NMKwNDcnMzMuMSJF!5e0!3m2!1sen!2sin!4v1234567890"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Trip Tunes office location Budgam Srinagar"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to Explore Kashmir?</h2>
+    <p>Call us, WhatsApp us, or fill in the contact form and we will get back to you within a few hours.</p>
+    <div class="cta-actions">
+      <a href="contact.html" class="btn btn-gold">Plan My Trip</a>
+      <a href="tel:8082227879" class="btn btn-outline-white">Call Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section" style="background:var(--off-white);">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">Common Questions</p>
+      <h2>Frequently Asked Questions</h2>
+      <div class="divider"></div>
+    </div>
+    <div style="max-width:720px;" itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" itemprop="name">Do you arrange complete Kashmir tour packages? <span class="faq-toggle">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <span itemprop="text">Yes. We arrange complete Kashmir tour packages for families, couples, groups, and solo travellers — covering hotel stays, transport, sightseeing, and houseboat bookings. We also build custom itineraries based on your dates and budget.</span>
+        </div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" itemprop="name">How do I book a houseboat on Dal Lake? <span class="faq-toggle">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <span itemprop="text">Call or WhatsApp us with your travel dates and the number of people. We will suggest the best houseboat options in your budget range and make the booking on your behalf. No advance payment is required in most cases.</span>
+        </div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" itemprop="name">Are your cab drivers trustworthy and experienced? <span class="faq-toggle">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <span itemprop="text">Yes. All drivers we work with are locally based, hold valid commercial driving licences, and have several years of experience navigating Kashmir's roads — including mountain routes to Gulmarg, Pahalgam, and Sonamarg.</span>
+        </div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" itemprop="name">What is the best time to visit Kashmir? <span class="faq-toggle">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <span itemprop="text">Kashmir is beautiful year-round. April to June is ideal for flowers, green meadows, and mild weather. December to February offers snowfall and skiing in Gulmarg. September and October bring golden autumn colours in Pahalgam.</span>
+        </div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" itemprop="name">Can you arrange airport pickup from Srinagar Airport? <span class="faq-toggle">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <span itemprop="text">Yes, we provide airport pickup and drop services at Srinagar Airport at any time of day. Share your flight details and we will have a driver ready when you land.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="site-footer"></div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/partials.js"></script>
+<script>
+function submitHeroForm() {
+  const name = document.getElementById('hf-name').value.trim();
+  const phone = document.getElementById('hf-phone').value.trim();
+  const pkg = document.getElementById('hf-package').value;
+  const msg = document.getElementById('hf-msg').value.trim();
+  const msgEl = document.getElementById('hero-form-msg');
+
+  if (!name || !phone) {
+    msgEl.innerHTML = '<div class="alert alert-error">Please enter your name and phone number.</div>';
+    return;
+  }
+  msgEl.innerHTML = '<div class="alert">Sending...</div>';
+
+  submitInquiry(name, phone, msg || pkg, pkg).then(ok => {
+    if (ok) {
+      msgEl.innerHTML = '<div class="alert alert-success">Thank you! We will contact you shortly.</div>';
+      document.getElementById('hf-name').value = '';
+      document.getElementById('hf-phone').value = '';
+      document.getElementById('hf-package').value = '';
+      document.getElementById('hf-msg').value = '';
+    } else {
+      msgEl.innerHTML = '<div class="alert alert-error">Something went wrong. Please call us directly.</div>';
+    }
+  });
+}
+</script>
+</body>
+</html>

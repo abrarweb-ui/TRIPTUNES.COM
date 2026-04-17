@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | Trip Tunes Tour and Travels</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: #f0f2f5; }
+    .admin-mobile-bar {
+      display: none;
+      background: var(--deep-blue);
+      color: white;
+      padding: 14px 18px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media(max-width:900px){
+      .admin-mobile-bar { display:flex; }
+      .admin-sidebar { position:fixed; left:-230px; top:0; bottom:0; z-index:1000; transition: left 0.25s; }
+      .admin-sidebar.open { left:0; }
+    }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .img-preview { width:60px; height:50px; object-fit:cover; border-radius:3px; margin-top:6px; }
+  </style>
+</head>
+<body>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<div id="login-screen" class="admin-login-wrap">
+  <div class="admin-login-card">
+    <div class="logo" style="justify-content:center;margin-bottom:20px;">
+      <img src="logo.png" alt="Trip Tunes Logo" style="height:40px;" onerror="this.style.display='none'">
+      <div class="logo-text">
+        <span class="logo-name">Trip Tunes</span>
+        <span class="logo-tagline">Admin Panel</span>
+      </div>
+    </div>
+    <h2>Sign In</h2>
+    <p>Access the Trip Tunes admin dashboard</p>
+    <div id="login-msg"></div>
+    <div class="form-group">
+      <label for="admin-email">Email</label>
+      <input type="email" id="admin-email" placeholder="admin@triptunes.com" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label for="admin-pass">Password</label>
+      <input type="password" id="admin-pass" placeholder="Password" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="adminLogin()">Sign In</button>
+  </div>
+</div>
+
+<!-- ============ ADMIN DASHBOARD ============ -->
+<div id="admin-screen" style="display:none;">
+  <!-- Mobile Bar -->
+  <div class="admin-mobile-bar">
+    <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;">Trip Tunes Admin</span>
+    <button onclick="document.querySelector('.admin-sidebar').classList.toggle('open')" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;">☰</button>
+  </div>
+
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo">
+        <div class="logo-name">Trip Tunes</div>
+        <div class="logo-tagline">Admin Dashboard</div>
+      </div>
+      <nav class="admin-nav">
+        <div class="admin-nav-label">Main</div>
+        <a href="#" class="active" onclick="showTab('dashboard',this)">📊 Dashboard</a>
+        <a href="#" onclick="showTab('inquiries',this)">📩 Inquiries</a>
+        <div class="admin-nav-label">Content</div>
+        <a href="#" onclick="showTab('tours',this)">🗺️ Tour Packages</a>
+        <a href="#" onclick="showTab('vehicles',this)">🚗 Vehicles</a>
+        <a href="#" onclick="showTab('gallery',this)">🖼️ Gallery</a>
+        <div class="admin-nav-label">Account</div>
+        <a href="index.html" target="_blank">🌐 View Website</a>
+        <a href="#" onclick="adminLogout()">🚪 Sign Out</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <div class="admin-topbar">
+        <h2 id="topbar-title">Dashboard</h2>
+        <span id="admin-user-email" style="font-size:0.85rem;color:var(--mid-grey);"></span>
+      </div>
+      <div class="admin-content">
+
+        <!-- DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content active">
+          <div class="admin-stats" id="stats-row">
+            <div class="stat-card"><div class="stat-val" id="stat-inquiries">—</div><div class="stat-label">Inquiries</div></div>
+            <div class="stat-card"><div class="stat-val" id="stat-tours">—</div><div class="stat-label">Tour Packages</div></div>
+            <div class="stat-card"><div class="stat-val" id="stat-vehicles">—</div><div class="stat-label">Vehicles</div></div>
+            <div class="stat-card"><div class="stat-val" id="stat-gallery">—</div><div class="stat-label">Gallery Images</div></div>
+          </div>
+          <div class="admin-panel">
+            <div class="admin-panel-header"><h3>Recent Inquiries</h3></div>
+            <div class="admin-panel-body" id="recent-inquiries"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+          </div>
+        </div>
+
+        <!-- INQUIRIES -->
+        <div id="tab-inquiries" class="tab-content">
+          <div class="admin-panel">
+            <div class="admin-panel-header">
+              <h3>All Inquiries</h3>
+              <span id="inq-count" style="font-size:0.82rem;color:var(--mid-grey);"></span>
+            </div>
+            <div class="admin-panel-body">
+              <div id="inquiries-table"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOURS -->
+        <div id="tab-tours" class="tab-content">
+          <div class="admin-panel">
+            <div class="admin-panel-header">
+              <h3>Tour Packages</h3>
+              <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-tour')">+ Add Tour</button>
+            </div>
+            <div class="admin-panel-body">
+              <div id="tours-table"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VEHICLES -->
+        <div id="tab-vehicles" class="tab-content">
+          <div class="admin-panel">
+            <div class="admin-panel-header">
+              <h3>Vehicles</h3>
+              <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-vehicle')">+ Add Vehicle</button>
+            </div>
+            <div class="admin-panel-body">
+              <div id="vehicles-table"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GALLERY -->
+        <div id="tab-gallery" class="tab-content">
+          <div class="admin-panel">
+            <div class="admin-panel-header">
+              <h3>Gallery Images</h3>
+              <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-image')">+ Add Image</button>
+            </div>
+            <div class="admin-panel-body">
+              <div id="gallery-table"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /admin-content -->
+    </div><!-- /admin-main -->
+  </div>
+</div>
+
+<!-- ============ MODALS ============ -->
+
+<!-- Add Tour -->
+<div class="modal-overlay" id="modal-add-tour">
+  <div class="modal">
+    <h3 id="tour-modal-title">Add Tour Package</h3>
+    <input type="hidden" id="tour-doc-id">
+    <div class="form-group"><label>Tour Name *</label><input type="text" id="t-name"></div>
+    <div class="form-group"><label>Description</label><textarea id="t-desc" rows="3"></textarea></div>
+    <div class="form-group"><label>Duration (e.g. 5 Nights / 6 Days)</label><input type="text" id="t-duration"></div>
+    <div class="form-group"><label>Price (₹ per person)</label><input type="number" id="t-price"></div>
+    <div class="form-group"><label>Image URL (Unsplash or Google)</label><input type="url" id="t-image" placeholder="https://images.unsplash.com/..."></div>
+    <div id="t-img-preview"></div>
+    <div class="form-group">
+      <label>Highlights (one per line)</label>
+      <textarea id="t-highlights" rows="4" placeholder="Dal Lake Shikara ride&#10;Gulmarg Gondola&#10;Pahalgam valley"></textarea>
+    </div>
+    <div class="form-group" style="display:flex;align-items:center;gap:10px;">
+      <input type="checkbox" id="t-featured" style="width:auto;">
+      <label for="t-featured" style="margin:0;">Mark as Featured</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-add-tour')">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveTour()">Save Tour</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Vehicle -->
+<div class="modal-overlay" id="modal-add-vehicle">
+  <div class="modal">
+    <h3 id="vehicle-modal-title">Add Vehicle</h3>
+    <input type="hidden" id="v-doc-id">
+    <div class="form-group"><label>Vehicle Name *</label><input type="text" id="v-name" placeholder="Toyota Innova Crysta"></div>
+    <div class="form-group"><label>Subtitle</label><input type="text" id="v-subtitle" placeholder="For families, 5-7 passengers"></div>
+    <div class="form-group"><label>Specs (comma separated)</label><input type="text" id="v-specs" placeholder="5-7 Passengers, A/C, Mountain Ready"></div>
+    <div class="form-group"><label>Price (₹ per day)</label><input type="number" id="v-price"></div>
+    <div class="form-group"><label>Image URL</label><input type="url" id="v-image" placeholder="https://images.unsplash.com/..."></div>
+    <div id="v-img-preview"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-add-vehicle')">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveVehicle()">Save Vehicle</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Gallery Image -->
+<div class="modal-overlay" id="modal-add-image">
+  <div class="modal">
+    <h3>Add Gallery Image</h3>
+    <div class="form-group">
+      <label>Image URL *</label>
+      <input type="url" id="g-image" placeholder="https://images.unsplash.com/photo-...">
+    </div>
+    <div id="g-img-preview"></div>
+    <p style="font-size:0.82rem;color:var(--mid-grey);margin-top:8px;">Paste an image URL from Unsplash or Google Images. The image will be shown in the public gallery page.</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-add-image')">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveGalleryImage()">Add to Gallery</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="js/firebase.js"></script>
+
+<script>
+// ============================================
+// Auth
+// ============================================
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    document.getElementById('admin-user-email').textContent = user.email;
+    loadDashboard();
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-screen').style.display = 'none';
+  }
+});
+
+function adminLogin() {
+  const email = document.getElementById('admin-email').value.trim();
+  const pass = document.getElementById('admin-pass').value;
+  const msgEl = document.getElementById('login-msg');
+  if (!email || !pass) { msgEl.innerHTML = '<div class="alert alert-error">Enter email and password.</div>'; return; }
+  msgEl.innerHTML = '<div class="alert">Signing in...</div>';
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(() => msgEl.innerHTML = '')
+    .catch(err => msgEl.innerHTML = `<div class="alert alert-error">${err.message}</div>`);
+}
+
+function adminLogout() {
+  auth.signOut();
+}
+
+// ============================================
+// Navigation
+// ============================================
+const TAB_TITLES = { dashboard:'Dashboard', inquiries:'Inquiries', tours:'Tour Packages', vehicles:'Vehicles', gallery:'Gallery' };
+
+function showTab(name, el) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('topbar-title').textContent = TAB_TITLES[name] || name;
+  document.querySelector('.admin-sidebar').classList.remove('open');
+
+  if (name === 'inquiries') loadInquiries();
+  if (name === 'tours') loadToursAdmin();
+  if (name === 'vehicles') loadVehiclesAdmin();
+  if (name === 'gallery') loadGalleryAdmin();
+}
+
+// ============================================
+// Dashboard
+// ============================================
+async function loadDashboard() {
+  const cols = ['inquiries','tours','vehicles','gallery'];
+  for (const c of cols) {
+    try {
+      const snap = await db.collection(c).get();
+      const el = document.getElementById('stat-' + c);
+      if (el) el.textContent = snap.size;
+    } catch(e) {}
+  }
+  // Recent inquiries
+  try {
+    const snap = await db.collection('inquiries').orderBy('date', 'desc').limit(5).get();
+    const el = document.getElementById('recent-inquiries');
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);font-size:0.9rem;">No inquiries yet.</p>'; return; }
+    let html = `<table class="admin-table"><thead><tr><th>Name</th><th>Phone</th><th>Package</th><th>Date</th></tr></thead><tbody>`;
+    snap.forEach(d => {
+      const i = d.data();
+      html += `<tr><td>${i.name||'—'}</td><td>${i.phone||'—'}</td><td>${i.packageName||'—'}</td><td>${formatDate(i.date)}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  } catch(e) { document.getElementById('recent-inquiries').innerHTML = '<p style="color:var(--mid-grey);font-size:0.9rem;">Could not load inquiries.</p>'; }
+}
+
+function formatDate(ts) {
+  if (!ts) return '—';
+  try { const d = ts.toDate(); return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }); } catch(e) { return '—'; }
+}
+
+// ============================================
+// Inquiries
+// ============================================
+async function loadInquiries() {
+  const el = document.getElementById('inquiries-table');
+  el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+  try {
+    const snap = await db.collection('inquiries').orderBy('date','desc').get();
+    document.getElementById('inq-count').textContent = snap.size + ' total';
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);">No inquiries found.</p>'; return; }
+    let html = `<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Name</th><th>Phone</th><th>Package</th><th>Message</th><th>Date</th><th>Action</th></tr></thead><tbody>`;
+    snap.forEach(d => {
+      const i = d.data();
+      html += `<tr>
+        <td><strong>${i.name||'—'}</strong></td>
+        <td><a href="tel:${i.phone}">${i.phone||'—'}</a></td>
+        <td>${i.packageName||'—'}</td>
+        <td style="max-width:200px;font-size:0.82rem;">${(i.message||'').substring(0,80)}${(i.message||'').length>80?'...':''}</td>
+        <td>${formatDate(i.date)}</td>
+        <td>
+          <a href="https://wa.me/${i.phone}?text=Hi%20${encodeURIComponent(i.name)}%2C%20thank%20you%20for%20inquiring%20with%20Trip%20Tunes!" target="_blank" class="action-btn">WhatsApp</a>
+          <button class="action-btn del" onclick="deleteDoc('inquiries','${d.id}',loadInquiries)">Delete</button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = '<p style="color:var(--mid-grey);">Could not load inquiries.</p>'; }
+}
+
+// ============================================
+// Tours Admin
+// ============================================
+async function loadToursAdmin() {
+  const el = document.getElementById('tours-table');
+  el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+  try {
+    const snap = await db.collection('tours').orderBy('name').get();
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No tour packages added yet. Click "+ Add Tour" to get started.</p>'; return; }
+    let html = `<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Image</th><th>Name</th><th>Duration</th><th>Price</th><th>Featured</th><th>Actions</th></tr></thead><tbody>`;
+    snap.forEach(d => {
+      const t = d.data();
+      html += `<tr>
+        <td>${t.image ? `<img src="${t.image}" alt="${t.name}">` : '—'}</td>
+        <td><strong>${t.name}</strong><br><span style="font-size:0.78rem;color:var(--mid-grey);">${(t.description||'').substring(0,50)}...</span></td>
+        <td>${t.duration||'—'}</td>
+        <td>${t.price ? '₹'+t.price : '—'}</td>
+        <td>${t.featured ? '⭐ Yes' : 'No'}</td>
+        <td>
+          <button class="action-btn" onclick="editTour('${d.id}')">Edit</button>
+          <button class="action-btn del" onclick="deleteDoc('tours','${d.id}',loadToursAdmin)">Delete</button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = '<p style="color:var(--mid-grey);">Could not load tours.</p>'; }
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// Add/Edit Tour
+async function editTour(docId) {
+  const d = await db.collection('tours').doc(docId).get();
+  const t = d.data();
+  document.getElementById('tour-modal-title').textContent = 'Edit Tour Package';
+  document.getElementById('tour-doc-id').value = docId;
+  document.getElementById('t-name').value = t.name || '';
+  document.getElementById('t-desc').value = t.description || '';
+  document.getElementById('t-duration').value = t.duration || '';
+  document.getElementById('t-price').value = t.price || '';
+  document.getElementById('t-image').value = t.image || '';
+  document.getElementById('t-highlights').value = Array.isArray(t.highlights) ? t.highlights.join('\n') : '';
+  document.getElementById('t-featured').checked = t.featured || false;
+  document.getElementById('t-img-preview').innerHTML = t.image ? `<img class="img-preview" src="${t.image}" alt="preview">` : '';
+  openModal('modal-add-tour');
+}
+
+document.getElementById('t-image').addEventListener('input', function() {
+  document.getElementById('t-img-preview').innerHTML = this.value ? `<img class="img-preview" src="${this.value}" alt="preview" onerror="this.style.display='none'">` : '';
+});
+document.getElementById('v-image').addEventListener('input', function() {
+  document.getElementById('v-img-preview').innerHTML = this.value ? `<img class="img-preview" src="${this.value}" alt="preview" onerror="this.style.display='none'">` : '';
+});
+document.getElementById('g-image').addEventListener('input', function() {
+  document.getElementById('g-img-preview').innerHTML = this.value ? `<img class="img-preview" src="${this.value}" alt="preview" onerror="this.style.display='none'">` : '';
+});
+
+async function saveTour() {
+  const name = document.getElementById('t-name').value.trim();
+  if (!name) { alert('Tour name is required.'); return; }
+  const docId = document.getElementById('tour-doc-id').value;
+  const data = {
+    name,
+    description: document.getElementById('t-desc').value.trim(),
+    duration: document.getElementById('t-duration').value.trim(),
+    price: document.getElementById('t-price').value || null,
+    image: document.getElementById('t-image').value.trim(),
+    highlights: document.getElementById('t-highlights').value.split('\n').map(h=>h.trim()).filter(Boolean),
+    featured: document.getElementById('t-featured').checked
+  };
+  try {
+    if (docId) { await db.collection('tours').doc(docId).update(data); }
+    else { await db.collection('tours').add(data); }
+    closeModal('modal-add-tour');
+    resetTourForm();
+    loadToursAdmin();
+  } catch(e) { alert('Error saving tour: ' + e.message); }
+}
+
+function resetTourForm() {
+  ['t-name','t-desc','t-duration','t-price','t-image','t-highlights'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('t-featured').checked = false;
+  document.getElementById('tour-doc-id').value = '';
+  document.getElementById('tour-modal-title').textContent = 'Add Tour Package';
+  document.getElementById('t-img-preview').innerHTML = '';
+}
+
+// ============================================
+// Vehicles Admin
+// ============================================
+async function loadVehiclesAdmin() {
+  const el = document.getElementById('vehicles-table');
+  el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+  try {
+    const snap = await db.collection('vehicles').orderBy('name').get();
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No vehicles added yet.</p>'; return; }
+    let html = `<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Image</th><th>Name</th><th>Subtitle</th><th>Price/Day</th><th>Actions</th></tr></thead><tbody>`;
+    snap.forEach(d => {
+      const v = d.data();
+      html += `<tr>
+        <td>${v.image ? `<img src="${v.image}" alt="${v.name}">` : '—'}</td>
+        <td><strong>${v.name}</strong></td>
+        <td style="font-size:0.84rem;">${v.subtitle||'—'}</td>
+        <td>${v.price ? '₹'+v.price : '—'}</td>
+        <td>
+          <button class="action-btn" onclick="editVehicle('${d.id}')">Edit</button>
+          <button class="action-btn del" onclick="deleteDoc('vehicles','${d.id}',loadVehiclesAdmin)">Delete</button>
+        </td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = '<p style="color:var(--mid-grey);">Could not load vehicles.</p>'; }
+}
+
+async function editVehicle(docId) {
+  const d = await db.collection('vehicles').doc(docId).get();
+  const v = d.data();
+  document.getElementById('vehicle-modal-title').textContent = 'Edit Vehicle';
+  document.getElementById('v-doc-id').value = docId;
+  document.getElementById('v-name').value = v.name || '';
+  document.getElementById('v-subtitle').value = v.subtitle || '';
+  document.getElementById('v-specs').value = Array.isArray(v.specs) ? v.specs.join(', ') : '';
+  document.getElementById('v-price').value = v.price || '';
+  document.getElementById('v-image').value = v.image || '';
+  document.getElementById('v-img-preview').innerHTML = v.image ? `<img class="img-preview" src="${v.image}" alt="preview">` : '';
+  openModal('modal-add-vehicle');
+}
+
+async function saveVehicle() {
+  const name = document.getElementById('v-name').value.trim();
+  if (!name) { alert('Vehicle name is required.'); return; }
+  const docId = document.getElementById('v-doc-id').value;
+  const data = {
+    name,
+    subtitle: document.getElementById('v-subtitle').value.trim(),
+    specs: document.getElementById('v-specs').value.split(',').map(s=>s.trim()).filter(Boolean),
+    price: document.getElementById('v-price').value || null,
+    image: document.getElementById('v-image').value.trim()
+  };
+  try {
+    if (docId) { await db.collection('vehicles').doc(docId).update(data); }
+    else { await db.collection('vehicles').add(data); }
+    closeModal('modal-add-vehicle');
+    ['v-name','v-subtitle','v-specs','v-price','v-image'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('v-doc-id').value = '';
+    document.getElementById('vehicle-modal-title').textContent = 'Add Vehicle';
+    document.getElementById('v-img-preview').innerHTML = '';
+    loadVehiclesAdmin();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+// ============================================
+// Gallery Admin
+// ============================================
+async function loadGalleryAdmin() {
+  const el = document.getElementById('gallery-table');
+  el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+  try {
+    const snap = await db.collection('gallery').get();
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No images added yet.</p>'; return; }
+    let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;">';
+    snap.forEach(d => {
+      const { image } = d.data();
+      html += `<div style="position:relative;border:1px solid var(--border);border-radius:5px;overflow:hidden;">
+        <img src="${image}" alt="Gallery image" style="width:100%;height:120px;object-fit:cover;" onerror="this.src='https://via.placeholder.com/200'">
+        <div style="padding:8px;text-align:center;">
+          <button class="action-btn del" onclick="deleteDoc('gallery','${d.id}',loadGalleryAdmin)" style="font-size:0.75rem;">Remove</button>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = '<p style="color:var(--mid-grey);">Could not load gallery.</p>'; }
+}
+
+async function saveGalleryImage() {
+  const image = document.getElementById('g-image').value.trim();
+  if (!image) { alert('Please enter an image URL.'); return; }
+  try {
+    await db.collection('gallery').add({ image });
+    closeModal('modal-add-image');
+    document.getElementById('g-image').value = '';
+    document.getElementById('g-img-preview').innerHTML = '';
+    loadGalleryAdmin();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+// ============================================
+// Delete helper
+// ============================================
+async function deleteDoc(collection, docId, reloadFn) {
+  if (!confirm('Are you sure you want to delete this item? This cannot be undone.')) return;
+  try {
+    await db.collection(collection).doc(docId).delete();
+    reloadFn();
+  } catch(e) { alert('Error deleting: ' + e.message); }
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+</script>
+</body>
+</html>
