@@ -7,32 +7,90 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    body { background: #f0f2f5; }
+    body { background: #f0f2f5; margin:0; }
+
+    /* Mobile top bar */
     .admin-mobile-bar {
       display: none;
       background: var(--deep-blue);
-      color: white;
+      color: #fff;
       padding: 14px 18px;
       align-items: center;
       justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 900;
     }
+    .admin-mobile-bar span { font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; }
+    .mob-menu-btn { background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1; }
+
     @media(max-width:900px){
       .admin-mobile-bar { display:flex; }
-      .admin-sidebar { position:fixed; left:-230px; top:0; bottom:0; z-index:1000; transition: left 0.25s; }
-      .admin-sidebar.open { left:0; }
+      .admin-sidebar {
+        position: fixed;
+        left: -230px;
+        top: 0; bottom: 0;
+        z-index: 1000;
+        transition: left 0.22s ease;
+        overflow-y: auto;
+      }
+      .admin-sidebar.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.18); }
+      .sidebar-overlay {
+        display: none;
+        position: fixed; inset:0; background:rgba(0,0,0,0.35); z-index:999;
+      }
+      .sidebar-overlay.open { display:block; }
     }
+
     .tab-content { display:none; }
     .tab-content.active { display:block; }
-    .img-preview { width:60px; height:50px; object-fit:cover; border-radius:3px; margin-top:6px; }
+
+    /* Image preview inside modals */
+    .img-preview-box {
+      margin-top: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      height: 120px;
+      background: var(--light-grey);
+      display: none;
+    }
+    .img-preview-box img { width:100%; height:100%; object-fit:cover; }
+    .img-preview-box.show { display:block; }
+
+    /* Gallery grid in admin */
+    .admin-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    .admin-gallery-item {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      overflow: hidden;
+      background: var(--white);
+    }
+    .admin-gallery-item img { width:100%; height:110px; object-fit:cover; display:block; }
+    .admin-gallery-item .gal-footer {
+      padding: 7px 8px;
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid var(--light-grey);
+    }
+
+    /* Table overflow on small screens */
+    .table-wrap { overflow-x: auto; }
+
+    /* Highlight active sidebar link */
+    .admin-nav a.active { background:rgba(255,255,255,0.1); color:var(--gold-light) !important; }
   </style>
 </head>
 <body>
 
-<!-- ============ LOGIN SCREEN ============ -->
+<!-- ======== LOGIN ======== -->
 <div id="login-screen" class="admin-login-wrap">
   <div class="admin-login-card">
     <div class="logo" style="justify-content:center;margin-bottom:20px;">
-      <img src="logo.png" alt="Trip Tunes Logo" style="height:40px;" onerror="this.style.display='none'">
+      <img src="logo.png" alt="Trip Tunes" style="height:40px;" onerror="this.style.display='none'">
       <div class="logo-text">
         <span class="logo-name">Trip Tunes</span>
         <span class="logo-tagline">Admin Panel</span>
@@ -42,69 +100,73 @@
     <p>Access the Trip Tunes admin dashboard</p>
     <div id="login-msg"></div>
     <div class="form-group">
-      <label for="admin-email">Email</label>
+      <label>Email</label>
       <input type="email" id="admin-email" placeholder="admin@triptunes.com" autocomplete="username">
     </div>
     <div class="form-group">
-      <label for="admin-pass">Password</label>
-      <input type="password" id="admin-pass" placeholder="Password" autocomplete="current-password">
+      <label>Password</label>
+      <input type="password" id="admin-pass" placeholder="Password" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter') adminLogin()">
     </div>
     <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="adminLogin()">Sign In</button>
   </div>
 </div>
 
-<!-- ============ ADMIN DASHBOARD ============ -->
+<!-- ======== SIDEBAR OVERLAY (mobile) ======== -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ======== DASHBOARD ======== -->
 <div id="admin-screen" style="display:none;">
-  <!-- Mobile Bar -->
   <div class="admin-mobile-bar">
-    <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;">Trip Tunes Admin</span>
-    <button onclick="document.querySelector('.admin-sidebar').classList.toggle('open')" style="background:none;border:none;color:white;font-size:1.3rem;cursor:pointer;">☰</button>
+    <span>Trip Tunes Admin</span>
+    <button class="mob-menu-btn" onclick="openSidebar()">&#9776;</button>
   </div>
 
   <div class="admin-layout">
     <!-- Sidebar -->
-    <aside class="admin-sidebar">
+    <aside class="admin-sidebar" id="admin-sidebar">
       <div class="admin-logo">
         <div class="logo-name">Trip Tunes</div>
         <div class="logo-tagline">Admin Dashboard</div>
       </div>
       <nav class="admin-nav">
         <div class="admin-nav-label">Main</div>
-        <a href="#" class="active" onclick="showTab('dashboard',this)">📊 Dashboard</a>
-        <a href="#" onclick="showTab('inquiries',this)">📩 Inquiries</a>
+        <a href="#" id="nav-dashboard"  class="active" onclick="showTab('dashboard',this);return false;">📊 Dashboard</a>
+        <a href="#" id="nav-inquiries"           onclick="showTab('inquiries',this);return false;">📩 Inquiries</a>
         <div class="admin-nav-label">Content</div>
-        <a href="#" onclick="showTab('tours',this)">🗺️ Tour Packages</a>
-        <a href="#" onclick="showTab('vehicles',this)">🚗 Vehicles</a>
-        <a href="#" onclick="showTab('gallery',this)">🖼️ Gallery</a>
+        <a href="#" id="nav-tours"               onclick="showTab('tours',this);return false;">🗺️ Tour Packages</a>
+        <a href="#" id="nav-vehicles"            onclick="showTab('vehicles',this);return false;">🚗 Vehicles</a>
+        <a href="#" id="nav-gallery"             onclick="showTab('gallery',this);return false;">🖼️ Gallery</a>
         <div class="admin-nav-label">Account</div>
         <a href="index.html" target="_blank">🌐 View Website</a>
-        <a href="#" onclick="adminLogout()">🚪 Sign Out</a>
+        <a href="#" onclick="adminLogout();return false;">🚪 Sign Out</a>
       </nav>
     </aside>
 
-    <!-- Main -->
+    <!-- Main area -->
     <div class="admin-main">
       <div class="admin-topbar">
         <h2 id="topbar-title">Dashboard</h2>
         <span id="admin-user-email" style="font-size:0.85rem;color:var(--mid-grey);"></span>
       </div>
+
       <div class="admin-content">
 
-        <!-- DASHBOARD -->
+        <!-- ===== DASHBOARD ===== -->
         <div id="tab-dashboard" class="tab-content active">
-          <div class="admin-stats" id="stats-row">
-            <div class="stat-card"><div class="stat-val" id="stat-inquiries">—</div><div class="stat-label">Inquiries</div></div>
-            <div class="stat-card"><div class="stat-val" id="stat-tours">—</div><div class="stat-label">Tour Packages</div></div>
-            <div class="stat-card"><div class="stat-val" id="stat-vehicles">—</div><div class="stat-label">Vehicles</div></div>
-            <div class="stat-card"><div class="stat-val" id="stat-gallery">—</div><div class="stat-label">Gallery Images</div></div>
+          <div class="admin-stats">
+            <div class="stat-card"><div class="stat-val" id="s-inq">—</div><div class="stat-label">Inquiries</div></div>
+            <div class="stat-card"><div class="stat-val" id="s-tours">—</div><div class="stat-label">Tour Packages</div></div>
+            <div class="stat-card"><div class="stat-val" id="s-veh">—</div><div class="stat-label">Vehicles</div></div>
+            <div class="stat-card"><div class="stat-val" id="s-gal">—</div><div class="stat-label">Gallery Images</div></div>
           </div>
           <div class="admin-panel">
             <div class="admin-panel-header"><h3>Recent Inquiries</h3></div>
-            <div class="admin-panel-body" id="recent-inquiries"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+            <div class="admin-panel-body" id="dash-recent"><div class="spinner-wrap"><div class="spinner"></div></div></div>
           </div>
         </div>
 
-        <!-- INQUIRIES -->
+        <!-- ===== INQUIRIES ===== -->
         <div id="tab-inquiries" class="tab-content">
           <div class="admin-panel">
             <div class="admin-panel-header">
@@ -112,447 +174,519 @@
               <span id="inq-count" style="font-size:0.82rem;color:var(--mid-grey);"></span>
             </div>
             <div class="admin-panel-body">
-              <div id="inquiries-table"></div>
+              <div class="table-wrap" id="inq-table"><div class="spinner-wrap"><div class="spinner"></div></div></div>
             </div>
           </div>
         </div>
 
-        <!-- TOURS -->
+        <!-- ===== TOURS ===== -->
         <div id="tab-tours" class="tab-content">
           <div class="admin-panel">
             <div class="admin-panel-header">
               <h3>Tour Packages</h3>
-              <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-tour')">+ Add Tour</button>
+              <button class="btn btn-primary btn-sm" onclick="openTourModal()">+ Add Tour</button>
             </div>
             <div class="admin-panel-body">
-              <div id="tours-table"></div>
+              <div class="table-wrap" id="tours-table"><div class="spinner-wrap"><div class="spinner"></div></div></div>
             </div>
           </div>
         </div>
 
-        <!-- VEHICLES -->
+        <!-- ===== VEHICLES ===== -->
         <div id="tab-vehicles" class="tab-content">
           <div class="admin-panel">
             <div class="admin-panel-header">
               <h3>Vehicles</h3>
-              <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-vehicle')">+ Add Vehicle</button>
+              <button class="btn btn-primary btn-sm" onclick="openVehicleModal()">+ Add Vehicle</button>
             </div>
             <div class="admin-panel-body">
-              <div id="vehicles-table"></div>
+              <div class="table-wrap" id="vehicles-table"><div class="spinner-wrap"><div class="spinner"></div></div></div>
             </div>
           </div>
         </div>
 
-        <!-- GALLERY -->
+        <!-- ===== GALLERY ===== -->
         <div id="tab-gallery" class="tab-content">
           <div class="admin-panel">
             <div class="admin-panel-header">
               <h3>Gallery Images</h3>
-              <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-image')">+ Add Image</button>
+              <button class="btn btn-primary btn-sm" onclick="openGalleryModal()">+ Add Image</button>
             </div>
             <div class="admin-panel-body">
-              <div id="gallery-table"></div>
+              <div id="gallery-grid-admin"><div class="spinner-wrap"><div class="spinner"></div></div></div>
             </div>
           </div>
         </div>
 
       </div><!-- /admin-content -->
     </div><!-- /admin-main -->
-  </div>
-</div>
+  </div><!-- /admin-layout -->
+</div><!-- /admin-screen -->
 
-<!-- ============ MODALS ============ -->
 
-<!-- Add Tour -->
-<div class="modal-overlay" id="modal-add-tour">
+<!-- ======== MODAL: ADD / EDIT TOUR ======== -->
+<div class="modal-overlay" id="modal-tour">
   <div class="modal">
-    <h3 id="tour-modal-title">Add Tour Package</h3>
-    <input type="hidden" id="tour-doc-id">
-    <div class="form-group"><label>Tour Name *</label><input type="text" id="t-name"></div>
-    <div class="form-group"><label>Description</label><textarea id="t-desc" rows="3"></textarea></div>
-    <div class="form-group"><label>Duration (e.g. 5 Nights / 6 Days)</label><input type="text" id="t-duration"></div>
-    <div class="form-group"><label>Price (₹ per person)</label><input type="number" id="t-price"></div>
-    <div class="form-group"><label>Image URL (Unsplash or Google)</label><input type="url" id="t-image" placeholder="https://images.unsplash.com/..."></div>
-    <div id="t-img-preview"></div>
+    <h3 id="tour-modal-h">Add Tour Package</h3>
+    <input type="hidden" id="t-id">
+    <div class="form-group"><label>Tour Name *</label><input type="text" id="t-name" placeholder="e.g. Gulmarg Tour"></div>
+    <div class="form-group"><label>Short Description</label><textarea id="t-desc" rows="3" placeholder="A brief description shown on the card..."></textarea></div>
+    <div class="form-group"><label>Duration</label><input type="text" id="t-duration" placeholder="e.g. 2 Nights / 3 Days"></div>
+    <div class="form-group"><label>Price (₹ per person)</label><input type="number" id="t-price" placeholder="Leave blank to show 'Contact for Price'"></div>
     <div class="form-group">
-      <label>Highlights (one per line)</label>
-      <textarea id="t-highlights" rows="4" placeholder="Dal Lake Shikara ride&#10;Gulmarg Gondola&#10;Pahalgam valley"></textarea>
+      <label>Image URL</label>
+      <input type="url" id="t-image" placeholder="https://images.unsplash.com/photo-..." oninput="previewImg('t-image','t-img-preview')">
+      <div class="img-preview-box" id="t-img-preview"><img src="" alt="preview"></div>
+    </div>
+    <div class="form-group">
+      <label>Highlights <span style="font-weight:400;color:var(--mid-grey);">(one per line)</span></label>
+      <textarea id="t-highlights" rows="5" placeholder="Dal Lake Shikara ride&#10;Gulmarg Gondola&#10;Pahalgam valley walk"></textarea>
     </div>
     <div class="form-group" style="display:flex;align-items:center;gap:10px;">
-      <input type="checkbox" id="t-featured" style="width:auto;">
-      <label for="t-featured" style="margin:0;">Mark as Featured</label>
+      <input type="checkbox" id="t-featured" style="width:auto;cursor:pointer;">
+      <label for="t-featured" style="margin:0;cursor:pointer;">Mark as Featured</label>
     </div>
+    <div id="tour-save-msg"></div>
     <div class="modal-actions">
-      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-add-tour')">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveTour()">Save Tour</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-tour')">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="tour-save-btn" onclick="saveTour()">Save Tour</button>
     </div>
   </div>
 </div>
 
-<!-- Add Vehicle -->
-<div class="modal-overlay" id="modal-add-vehicle">
+<!-- ======== MODAL: ADD / EDIT VEHICLE ======== -->
+<div class="modal-overlay" id="modal-vehicle">
   <div class="modal">
-    <h3 id="vehicle-modal-title">Add Vehicle</h3>
-    <input type="hidden" id="v-doc-id">
-    <div class="form-group"><label>Vehicle Name *</label><input type="text" id="v-name" placeholder="Toyota Innova Crysta"></div>
-    <div class="form-group"><label>Subtitle</label><input type="text" id="v-subtitle" placeholder="For families, 5-7 passengers"></div>
-    <div class="form-group"><label>Specs (comma separated)</label><input type="text" id="v-specs" placeholder="5-7 Passengers, A/C, Mountain Ready"></div>
-    <div class="form-group"><label>Price (₹ per day)</label><input type="number" id="v-price"></div>
-    <div class="form-group"><label>Image URL</label><input type="url" id="v-image" placeholder="https://images.unsplash.com/..."></div>
-    <div id="v-img-preview"></div>
+    <h3 id="vehicle-modal-h">Add Vehicle</h3>
+    <input type="hidden" id="v-id">
+    <div class="form-group"><label>Vehicle Name *</label><input type="text" id="v-name" placeholder="e.g. Toyota Innova Crysta"></div>
+    <div class="form-group"><label>Subtitle / Description</label><input type="text" id="v-subtitle" placeholder="e.g. For families, 5–7 passengers"></div>
+    <div class="form-group"><label>Specs <span style="font-weight:400;color:var(--mid-grey);">(comma separated)</span></label><input type="text" id="v-specs" placeholder="5–7 Passengers, A/C, Mountain Ready"></div>
+    <div class="form-group"><label>Price per day (₹)</label><input type="number" id="v-price" placeholder="Leave blank to hide price"></div>
+    <div class="form-group">
+      <label>Image URL</label>
+      <input type="url" id="v-image" placeholder="https://images.unsplash.com/photo-..." oninput="previewImg('v-image','v-img-preview')">
+      <div class="img-preview-box" id="v-img-preview"><img src="" alt="preview"></div>
+    </div>
+    <div id="vehicle-save-msg"></div>
     <div class="modal-actions">
-      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-add-vehicle')">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveVehicle()">Save Vehicle</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-vehicle')">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="vehicle-save-btn" onclick="saveVehicle()">Save Vehicle</button>
     </div>
   </div>
 </div>
 
-<!-- Add Gallery Image -->
-<div class="modal-overlay" id="modal-add-image">
+<!-- ======== MODAL: ADD GALLERY IMAGE ======== -->
+<div class="modal-overlay" id="modal-gallery">
   <div class="modal">
     <h3>Add Gallery Image</h3>
     <div class="form-group">
       <label>Image URL *</label>
-      <input type="url" id="g-image" placeholder="https://images.unsplash.com/photo-...">
+      <input type="url" id="g-image" placeholder="https://images.unsplash.com/photo-..." oninput="previewImg('g-image','g-img-preview')">
+      <div class="img-preview-box" id="g-img-preview"><img src="" alt="preview"></div>
     </div>
-    <div id="g-img-preview"></div>
-    <p style="font-size:0.82rem;color:var(--mid-grey);margin-top:8px;">Paste an image URL from Unsplash or Google Images. The image will be shown in the public gallery page.</p>
+    <p style="font-size:0.82rem;color:var(--mid-grey);margin-top:8px;">Paste a direct image URL from Unsplash or Google. It will appear in the public gallery immediately.</p>
+    <div id="gallery-save-msg"></div>
     <div class="modal-actions">
-      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-add-image')">Cancel</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-gallery')">Cancel</button>
       <button class="btn btn-primary btn-sm" onclick="saveGalleryImage()">Add to Gallery</button>
     </div>
   </div>
 </div>
 
-<!-- Firebase SDKs -->
+
+<!-- ======== FIREBASE + SCRIPTS ======== -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="js/firebase.js"></script>
 
 <script>
-// ============================================
+// ─────────────────────────────────────────────
+// Sidebar helpers
+// ─────────────────────────────────────────────
+function openSidebar() {
+  document.getElementById('admin-sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('admin-sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ─────────────────────────────────────────────
 // Auth
-// ============================================
+// ─────────────────────────────────────────────
 auth.onAuthStateChanged(user => {
   if (user) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
+    document.getElementById('login-screen').style.display  = 'none';
+    document.getElementById('admin-screen').style.display  = 'block';
     document.getElementById('admin-user-email').textContent = user.email;
-    loadDashboard();
+    startDashboard();
   } else {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display  = 'flex';
+    document.getElementById('admin-screen').style.display  = 'none';
   }
 });
 
 function adminLogin() {
   const email = document.getElementById('admin-email').value.trim();
-  const pass = document.getElementById('admin-pass').value;
-  const msgEl = document.getElementById('login-msg');
-  if (!email || !pass) { msgEl.innerHTML = '<div class="alert alert-error">Enter email and password.</div>'; return; }
-  msgEl.innerHTML = '<div class="alert">Signing in...</div>';
+  const pass  = document.getElementById('admin-pass').value;
+  const msg   = document.getElementById('login-msg');
+  if (!email || !pass) { msg.innerHTML = '<div class="alert alert-error">Please enter email and password.</div>'; return; }
+  msg.innerHTML = '<div class="alert">Signing in…</div>';
   auth.signInWithEmailAndPassword(email, pass)
-    .then(() => msgEl.innerHTML = '')
-    .catch(err => msgEl.innerHTML = `<div class="alert alert-error">${err.message}</div>`);
+    .then(() => msg.innerHTML = '')
+    .catch(err => msg.innerHTML = `<div class="alert alert-error">${err.message}</div>`);
 }
+function adminLogout() { auth.signOut(); }
 
-function adminLogout() {
-  auth.signOut();
-}
-
-// ============================================
-// Navigation
-// ============================================
-const TAB_TITLES = { dashboard:'Dashboard', inquiries:'Inquiries', tours:'Tour Packages', vehicles:'Vehicles', gallery:'Gallery' };
+// ─────────────────────────────────────────────
+// Tab navigation
+// ─────────────────────────────────────────────
+const TAB_LABELS = { dashboard:'Dashboard', inquiries:'Inquiries', tours:'Tour Packages', vehicles:'Vehicles', gallery:'Gallery' };
+const tabListeners = {}; // track active listeners to avoid duplicates
 
 function showTab(name, el) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   el.classList.add('active');
-  document.getElementById('topbar-title').textContent = TAB_TITLES[name] || name;
-  document.querySelector('.admin-sidebar').classList.remove('open');
+  document.getElementById('topbar-title').textContent = TAB_LABELS[name] || name;
+  closeSidebar();
 
-  if (name === 'inquiries') loadInquiries();
-  if (name === 'tours') loadToursAdmin();
-  if (name === 'vehicles') loadVehiclesAdmin();
-  if (name === 'gallery') loadGalleryAdmin();
+  if (!tabListeners[name]) {
+    tabListeners[name] = true;
+    if (name === 'inquiries') listenInquiries();
+    if (name === 'tours')     listenTours();
+    if (name === 'vehicles')  listenVehicles();
+    if (name === 'gallery')   listenGalleryAdmin();
+  }
 }
 
-// ============================================
+// ─────────────────────────────────────────────
 // Dashboard
-// ============================================
-async function loadDashboard() {
-  const cols = ['inquiries','tours','vehicles','gallery'];
-  for (const c of cols) {
-    try {
-      const snap = await db.collection(c).get();
-      const el = document.getElementById('stat-' + c);
-      if (el) el.textContent = snap.size;
-    } catch(e) {}
-  }
-  // Recent inquiries
-  try {
-    const snap = await db.collection('inquiries').orderBy('date', 'desc').limit(5).get();
-    const el = document.getElementById('recent-inquiries');
+// ─────────────────────────────────────────────
+function startDashboard() {
+  // Count badges via one-time gets
+  ['inquiries','tours','vehicles','gallery'].forEach((col, i) => {
+    const ids = ['s-inq','s-tours','s-veh','s-gal'];
+    db.collection(col).get().then(s => { document.getElementById(ids[i]).textContent = s.size; }).catch(() => {});
+  });
+
+  // Recent inquiries (real-time)
+  db.collection('inquiries').orderBy('date','desc').limit(6).onSnapshot(snap => {
+    const el = document.getElementById('dash-recent');
     if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);font-size:0.9rem;">No inquiries yet.</p>'; return; }
-    let html = `<table class="admin-table"><thead><tr><th>Name</th><th>Phone</th><th>Package</th><th>Date</th></tr></thead><tbody>`;
+    let html = `<div class="table-wrap"><table class="admin-table">
+      <thead><tr><th>Name</th><th>Phone</th><th>Package</th><th>Date</th></tr></thead><tbody>`;
     snap.forEach(d => {
       const i = d.data();
-      html += `<tr><td>${i.name||'—'}</td><td>${i.phone||'—'}</td><td>${i.packageName||'—'}</td><td>${formatDate(i.date)}</td></tr>`;
+      html += `<tr>
+        <td><strong>${esc(i.name)}</strong></td>
+        <td><a href="tel:${esc(i.phone)}">${esc(i.phone)}</a></td>
+        <td>${esc(i.packageName)}</td>
+        <td>${fmtDate(i.date)}</td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+    el.innerHTML = html;
+  }, () => { document.getElementById('dash-recent').innerHTML = '<p style="color:var(--mid-grey);">Could not load inquiries.</p>'; });
+}
+
+// ─────────────────────────────────────────────
+// Inquiries — real-time
+// ─────────────────────────────────────────────
+function listenInquiries() {
+  db.collection('inquiries').orderBy('date','desc').onSnapshot(snap => {
+    document.getElementById('inq-count').textContent = snap.size + ' total';
+    const el = document.getElementById('inq-table');
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No inquiries yet.</p>'; return; }
+    let html = `<table class="admin-table">
+      <thead><tr><th>Name</th><th>Phone</th><th>Package</th><th>Message</th><th>Date</th><th></th></tr></thead><tbody>`;
+    snap.forEach(d => {
+      const i = d.data();
+      const wa = `https://wa.me/${(i.phone||'').replace(/\D/g,'')}?text=Hi%20${encodeURIComponent(i.name||'')}%2C%20thank%20you%20for%20contacting%20Trip%20Tunes!`;
+      html += `<tr>
+        <td><strong>${esc(i.name)}</strong></td>
+        <td><a href="tel:${esc(i.phone)}">${esc(i.phone)}</a></td>
+        <td>${esc(i.packageName)}</td>
+        <td style="max-width:180px;font-size:0.82rem;">${esc((i.message||'').substring(0,80))}${(i.message||'').length>80?'…':''}</td>
+        <td style="white-space:nowrap;">${fmtDate(i.date)}</td>
+        <td style="white-space:nowrap;">
+          <a href="${wa}" target="_blank" class="action-btn">WhatsApp</a>
+          <button class="action-btn del" onclick="del('inquiries','${d.id}')">Delete</button>
+        </td>
+      </tr>`;
     });
     html += '</tbody></table>';
     el.innerHTML = html;
-  } catch(e) { document.getElementById('recent-inquiries').innerHTML = '<p style="color:var(--mid-grey);font-size:0.9rem;">Could not load inquiries.</p>'; }
+  }, () => { document.getElementById('inq-table').innerHTML = '<p style="color:var(--mid-grey);">Could not load.</p>'; });
 }
 
-function formatDate(ts) {
-  if (!ts) return '—';
-  try { const d = ts.toDate(); return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }); } catch(e) { return '—'; }
-}
-
-// ============================================
-// Inquiries
-// ============================================
-async function loadInquiries() {
-  const el = document.getElementById('inquiries-table');
-  el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
-  try {
-    const snap = await db.collection('inquiries').orderBy('date','desc').get();
-    document.getElementById('inq-count').textContent = snap.size + ' total';
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);">No inquiries found.</p>'; return; }
-    let html = `<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Name</th><th>Phone</th><th>Package</th><th>Message</th><th>Date</th><th>Action</th></tr></thead><tbody>`;
-    snap.forEach(d => {
-      const i = d.data();
-      html += `<tr>
-        <td><strong>${i.name||'—'}</strong></td>
-        <td><a href="tel:${i.phone}">${i.phone||'—'}</a></td>
-        <td>${i.packageName||'—'}</td>
-        <td style="max-width:200px;font-size:0.82rem;">${(i.message||'').substring(0,80)}${(i.message||'').length>80?'...':''}</td>
-        <td>${formatDate(i.date)}</td>
-        <td>
-          <a href="https://wa.me/${i.phone}?text=Hi%20${encodeURIComponent(i.name)}%2C%20thank%20you%20for%20inquiring%20with%20Trip%20Tunes!" target="_blank" class="action-btn">WhatsApp</a>
-          <button class="action-btn del" onclick="deleteDoc('inquiries','${d.id}',loadInquiries)">Delete</button>
-        </td>
-      </tr>`;
-    });
-    html += '</tbody></table></div>';
-    el.innerHTML = html;
-  } catch(e) { el.innerHTML = '<p style="color:var(--mid-grey);">Could not load inquiries.</p>'; }
-}
-
-// ============================================
-// Tours Admin
-// ============================================
-async function loadToursAdmin() {
-  const el = document.getElementById('tours-table');
-  el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
-  try {
-    const snap = await db.collection('tours').orderBy('name').get();
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No tour packages added yet. Click "+ Add Tour" to get started.</p>'; return; }
-    let html = `<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Image</th><th>Name</th><th>Duration</th><th>Price</th><th>Featured</th><th>Actions</th></tr></thead><tbody>`;
+// ─────────────────────────────────────────────
+// Tours — real-time
+// ─────────────────────────────────────────────
+function listenTours() {
+  db.collection('tours').orderBy('name').onSnapshot(snap => {
+    const el = document.getElementById('tours-table');
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No tours yet. Click "+ Add Tour" to create your first package.</p>'; return; }
+    let html = `<table class="admin-table">
+      <thead><tr><th>Image</th><th>Name</th><th>Duration</th><th>Price</th><th>Featured</th><th></th></tr></thead><tbody>`;
     snap.forEach(d => {
       const t = d.data();
       html += `<tr>
-        <td>${t.image ? `<img src="${t.image}" alt="${t.name}">` : '—'}</td>
-        <td><strong>${t.name}</strong><br><span style="font-size:0.78rem;color:var(--mid-grey);">${(t.description||'').substring(0,50)}...</span></td>
-        <td>${t.duration||'—'}</td>
+        <td>${t.image ? `<img src="${esc(t.image)}" alt="${esc(t.name)}" style="width:52px;height:40px;object-fit:cover;border-radius:3px;">` : '—'}</td>
+        <td><strong>${esc(t.name)}</strong><br><span style="font-size:0.78rem;color:var(--mid-grey);">${esc((t.description||'').substring(0,55))}…</span></td>
+        <td>${esc(t.duration)}</td>
         <td>${t.price ? '₹'+t.price : '—'}</td>
         <td>${t.featured ? '⭐ Yes' : 'No'}</td>
-        <td>
+        <td style="white-space:nowrap;">
           <button class="action-btn" onclick="editTour('${d.id}')">Edit</button>
-          <button class="action-btn del" onclick="deleteDoc('tours','${d.id}',loadToursAdmin)">Delete</button>
+          <button class="action-btn del" onclick="del('tours','${d.id}')">Delete</button>
         </td>
       </tr>`;
     });
-    html += '</tbody></table></div>';
+    html += '</tbody></table>';
     el.innerHTML = html;
-  } catch(e) { el.innerHTML = '<p style="color:var(--mid-grey);">Could not load tours.</p>'; }
+  }, () => { document.getElementById('tours-table').innerHTML = '<p style="color:var(--mid-grey);">Could not load.</p>'; });
 }
 
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
+// Open blank tour modal
+function openTourModal() {
+  document.getElementById('tour-modal-h').textContent = 'Add Tour Package';
+  document.getElementById('t-id').value = '';
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-desc').value = '';
+  document.getElementById('t-duration').value = '';
+  document.getElementById('t-price').value = '';
+  document.getElementById('t-image').value = '';
+  document.getElementById('t-highlights').value = '';
+  document.getElementById('t-featured').checked = false;
+  document.getElementById('t-img-preview').classList.remove('show');
+  document.getElementById('tour-save-msg').innerHTML = '';
+  openModal('modal-tour');
 }
 
-// Add/Edit Tour
+// Edit existing tour
 async function editTour(docId) {
-  const d = await db.collection('tours').doc(docId).get();
-  const t = d.data();
-  document.getElementById('tour-modal-title').textContent = 'Edit Tour Package';
-  document.getElementById('tour-doc-id').value = docId;
+  const snap = await db.collection('tours').doc(docId).get();
+  if (!snap.exists) return;
+  const t = snap.data();
+  document.getElementById('tour-modal-h').textContent = 'Edit Tour Package';
+  document.getElementById('t-id').value = docId;
   document.getElementById('t-name').value = t.name || '';
   document.getElementById('t-desc').value = t.description || '';
   document.getElementById('t-duration').value = t.duration || '';
   document.getElementById('t-price').value = t.price || '';
   document.getElementById('t-image').value = t.image || '';
   document.getElementById('t-highlights').value = Array.isArray(t.highlights) ? t.highlights.join('\n') : '';
-  document.getElementById('t-featured').checked = t.featured || false;
-  document.getElementById('t-img-preview').innerHTML = t.image ? `<img class="img-preview" src="${t.image}" alt="preview">` : '';
-  openModal('modal-add-tour');
+  document.getElementById('t-featured').checked = !!t.featured;
+  document.getElementById('tour-save-msg').innerHTML = '';
+  setImgPreview('t-image', 't-img-preview');
+  openModal('modal-tour');
 }
-
-document.getElementById('t-image').addEventListener('input', function() {
-  document.getElementById('t-img-preview').innerHTML = this.value ? `<img class="img-preview" src="${this.value}" alt="preview" onerror="this.style.display='none'">` : '';
-});
-document.getElementById('v-image').addEventListener('input', function() {
-  document.getElementById('v-img-preview').innerHTML = this.value ? `<img class="img-preview" src="${this.value}" alt="preview" onerror="this.style.display='none'">` : '';
-});
-document.getElementById('g-image').addEventListener('input', function() {
-  document.getElementById('g-img-preview').innerHTML = this.value ? `<img class="img-preview" src="${this.value}" alt="preview" onerror="this.style.display='none'">` : '';
-});
 
 async function saveTour() {
   const name = document.getElementById('t-name').value.trim();
-  if (!name) { alert('Tour name is required.'); return; }
-  const docId = document.getElementById('tour-doc-id').value;
-  const data = {
+  if (!name) { showMsg('tour-save-msg', 'Tour name is required.', 'error'); return; }
+
+  setBtnLoading('tour-save-btn', true);
+  const docId = document.getElementById('t-id').value;
+  const data  = {
     name,
-    description: document.getElementById('t-desc').value.trim(),
-    duration: document.getElementById('t-duration').value.trim(),
-    price: document.getElementById('t-price').value || null,
-    image: document.getElementById('t-image').value.trim(),
-    highlights: document.getElementById('t-highlights').value.split('\n').map(h=>h.trim()).filter(Boolean),
-    featured: document.getElementById('t-featured').checked
+    description : document.getElementById('t-desc').value.trim(),
+    duration    : document.getElementById('t-duration').value.trim(),
+    price       : document.getElementById('t-price').value ? Number(document.getElementById('t-price').value) : null,
+    image       : document.getElementById('t-image').value.trim(),
+    highlights  : document.getElementById('t-highlights').value.split('\n').map(h => h.trim()).filter(Boolean),
+    featured    : document.getElementById('t-featured').checked
   };
+
   try {
-    if (docId) { await db.collection('tours').doc(docId).update(data); }
-    else { await db.collection('tours').add(data); }
-    closeModal('modal-add-tour');
-    resetTourForm();
-    loadToursAdmin();
-  } catch(e) { alert('Error saving tour: ' + e.message); }
+    if (docId) { await db.collection('tours').doc(docId).set(data); }
+    else       { await db.collection('tours').add(data); }
+    closeModal('modal-tour');
+    // listener auto-refreshes the table
+  } catch (e) {
+    showMsg('tour-save-msg', 'Error: ' + e.message, 'error');
+  }
+  setBtnLoading('tour-save-btn', false);
 }
 
-function resetTourForm() {
-  ['t-name','t-desc','t-duration','t-price','t-image','t-highlights'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('t-featured').checked = false;
-  document.getElementById('tour-doc-id').value = '';
-  document.getElementById('tour-modal-title').textContent = 'Add Tour Package';
-  document.getElementById('t-img-preview').innerHTML = '';
-}
-
-// ============================================
-// Vehicles Admin
-// ============================================
-async function loadVehiclesAdmin() {
-  const el = document.getElementById('vehicles-table');
-  el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
-  try {
-    const snap = await db.collection('vehicles').orderBy('name').get();
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No vehicles added yet.</p>'; return; }
-    let html = `<div style="overflow-x:auto;"><table class="admin-table"><thead><tr><th>Image</th><th>Name</th><th>Subtitle</th><th>Price/Day</th><th>Actions</th></tr></thead><tbody>`;
+// ─────────────────────────────────────────────
+// Vehicles — real-time
+// ─────────────────────────────────────────────
+function listenVehicles() {
+  db.collection('vehicles').orderBy('name').onSnapshot(snap => {
+    const el = document.getElementById('vehicles-table');
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No vehicles yet. Click "+ Add Vehicle" to create one.</p>'; return; }
+    let html = `<table class="admin-table">
+      <thead><tr><th>Image</th><th>Name</th><th>Subtitle</th><th>Price/Day</th><th></th></tr></thead><tbody>`;
     snap.forEach(d => {
       const v = d.data();
       html += `<tr>
-        <td>${v.image ? `<img src="${v.image}" alt="${v.name}">` : '—'}</td>
-        <td><strong>${v.name}</strong></td>
-        <td style="font-size:0.84rem;">${v.subtitle||'—'}</td>
+        <td>${v.image ? `<img src="${esc(v.image)}" alt="${esc(v.name)}" style="width:52px;height:40px;object-fit:cover;border-radius:3px;">` : '—'}</td>
+        <td><strong>${esc(v.name)}</strong></td>
+        <td style="font-size:0.84rem;">${esc(v.subtitle)}</td>
         <td>${v.price ? '₹'+v.price : '—'}</td>
-        <td>
+        <td style="white-space:nowrap;">
           <button class="action-btn" onclick="editVehicle('${d.id}')">Edit</button>
-          <button class="action-btn del" onclick="deleteDoc('vehicles','${d.id}',loadVehiclesAdmin)">Delete</button>
+          <button class="action-btn del" onclick="del('vehicles','${d.id}')">Delete</button>
         </td>
       </tr>`;
     });
-    html += '</tbody></table></div>';
+    html += '</tbody></table>';
     el.innerHTML = html;
-  } catch(e) { el.innerHTML = '<p style="color:var(--mid-grey);">Could not load vehicles.</p>'; }
+  }, () => { document.getElementById('vehicles-table').innerHTML = '<p style="color:var(--mid-grey);">Could not load.</p>'; });
+}
+
+function openVehicleModal() {
+  document.getElementById('vehicle-modal-h').textContent = 'Add Vehicle';
+  document.getElementById('v-id').value = '';
+  document.getElementById('v-name').value = '';
+  document.getElementById('v-subtitle').value = '';
+  document.getElementById('v-specs').value = '';
+  document.getElementById('v-price').value = '';
+  document.getElementById('v-image').value = '';
+  document.getElementById('v-img-preview').classList.remove('show');
+  document.getElementById('vehicle-save-msg').innerHTML = '';
+  openModal('modal-vehicle');
 }
 
 async function editVehicle(docId) {
-  const d = await db.collection('vehicles').doc(docId).get();
-  const v = d.data();
-  document.getElementById('vehicle-modal-title').textContent = 'Edit Vehicle';
-  document.getElementById('v-doc-id').value = docId;
+  const snap = await db.collection('vehicles').doc(docId).get();
+  if (!snap.exists) return;
+  const v = snap.data();
+  document.getElementById('vehicle-modal-h').textContent = 'Edit Vehicle';
+  document.getElementById('v-id').value = docId;
   document.getElementById('v-name').value = v.name || '';
   document.getElementById('v-subtitle').value = v.subtitle || '';
   document.getElementById('v-specs').value = Array.isArray(v.specs) ? v.specs.join(', ') : '';
   document.getElementById('v-price').value = v.price || '';
   document.getElementById('v-image').value = v.image || '';
-  document.getElementById('v-img-preview').innerHTML = v.image ? `<img class="img-preview" src="${v.image}" alt="preview">` : '';
-  openModal('modal-add-vehicle');
+  document.getElementById('vehicle-save-msg').innerHTML = '';
+  setImgPreview('v-image', 'v-img-preview');
+  openModal('modal-vehicle');
 }
 
 async function saveVehicle() {
   const name = document.getElementById('v-name').value.trim();
-  if (!name) { alert('Vehicle name is required.'); return; }
-  const docId = document.getElementById('v-doc-id').value;
-  const data = {
+  if (!name) { showMsg('vehicle-save-msg', 'Vehicle name is required.', 'error'); return; }
+
+  setBtnLoading('vehicle-save-btn', true);
+  const docId = document.getElementById('v-id').value;
+  const data  = {
     name,
-    subtitle: document.getElementById('v-subtitle').value.trim(),
-    specs: document.getElementById('v-specs').value.split(',').map(s=>s.trim()).filter(Boolean),
-    price: document.getElementById('v-price').value || null,
-    image: document.getElementById('v-image').value.trim()
+    subtitle : document.getElementById('v-subtitle').value.trim(),
+    specs    : document.getElementById('v-specs').value.split(',').map(s => s.trim()).filter(Boolean),
+    price    : document.getElementById('v-price').value ? Number(document.getElementById('v-price').value) : null,
+    image    : document.getElementById('v-image').value.trim()
   };
+
   try {
-    if (docId) { await db.collection('vehicles').doc(docId).update(data); }
-    else { await db.collection('vehicles').add(data); }
-    closeModal('modal-add-vehicle');
-    ['v-name','v-subtitle','v-specs','v-price','v-image'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('v-doc-id').value = '';
-    document.getElementById('vehicle-modal-title').textContent = 'Add Vehicle';
-    document.getElementById('v-img-preview').innerHTML = '';
-    loadVehiclesAdmin();
-  } catch(e) { alert('Error: ' + e.message); }
+    if (docId) { await db.collection('vehicles').doc(docId).set(data); }
+    else       { await db.collection('vehicles').add(data); }
+    closeModal('modal-vehicle');
+  } catch (e) {
+    showMsg('vehicle-save-msg', 'Error: ' + e.message, 'error');
+  }
+  setBtnLoading('vehicle-save-btn', false);
 }
 
-// ============================================
-// Gallery Admin
-// ============================================
-async function loadGalleryAdmin() {
-  const el = document.getElementById('gallery-table');
-  el.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
-  try {
-    const snap = await db.collection('gallery').get();
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No images added yet.</p>'; return; }
-    let html = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;">';
+// ─────────────────────────────────────────────
+// Gallery — real-time
+// ─────────────────────────────────────────────
+function listenGalleryAdmin() {
+  db.collection('gallery').onSnapshot(snap => {
+    const el = document.getElementById('gallery-grid-admin');
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No images yet. Click "+ Add Image" to upload one.</p>'; return; }
+    let html = '<div class="admin-gallery-grid">';
     snap.forEach(d => {
       const { image } = d.data();
-      html += `<div style="position:relative;border:1px solid var(--border);border-radius:5px;overflow:hidden;">
-        <img src="${image}" alt="Gallery image" style="width:100%;height:120px;object-fit:cover;" onerror="this.src='https://via.placeholder.com/200'">
-        <div style="padding:8px;text-align:center;">
-          <button class="action-btn del" onclick="deleteDoc('gallery','${d.id}',loadGalleryAdmin)" style="font-size:0.75rem;">Remove</button>
+      if (!image) return;
+      html += `<div class="admin-gallery-item">
+        <img src="${esc(image)}" alt="Gallery" loading="lazy" onerror="this.src='https://via.placeholder.com/200x110?text=Error'">
+        <div class="gal-footer">
+          <button class="action-btn del" onclick="del('gallery','${d.id}')">Remove</button>
         </div>
       </div>`;
     });
     html += '</div>';
     el.innerHTML = html;
-  } catch(e) { el.innerHTML = '<p style="color:var(--mid-grey);">Could not load gallery.</p>'; }
+  }, () => { document.getElementById('gallery-grid-admin').innerHTML = '<p style="color:var(--mid-grey);">Could not load.</p>'; });
+}
+
+function openGalleryModal() {
+  document.getElementById('g-image').value = '';
+  document.getElementById('g-img-preview').classList.remove('show');
+  document.getElementById('gallery-save-msg').innerHTML = '';
+  openModal('modal-gallery');
 }
 
 async function saveGalleryImage() {
   const image = document.getElementById('g-image').value.trim();
-  if (!image) { alert('Please enter an image URL.'); return; }
+  if (!image) { showMsg('gallery-save-msg', 'Please enter an image URL.', 'error'); return; }
   try {
     await db.collection('gallery').add({ image });
-    closeModal('modal-add-image');
-    document.getElementById('g-image').value = '';
-    document.getElementById('g-img-preview').innerHTML = '';
-    loadGalleryAdmin();
-  } catch(e) { alert('Error: ' + e.message); }
+    closeModal('modal-gallery');
+  } catch (e) {
+    showMsg('gallery-save-msg', 'Error: ' + e.message, 'error');
+  }
 }
 
-// ============================================
-// Delete helper
-// ============================================
-async function deleteDoc(collection, docId, reloadFn) {
-  if (!confirm('Are you sure you want to delete this item? This cannot be undone.')) return;
-  try {
-    await db.collection(collection).doc(docId).delete();
-    reloadFn();
-  } catch(e) { alert('Error deleting: ' + e.message); }
-}
+// ─────────────────────────────────────────────
+// Shared helpers
+// ─────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// Close modals on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('open');
-  });
+// Close modal on background click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
 });
+
+async function del(collection, docId) {
+  if (!confirm('Delete this item? This cannot be undone.')) return;
+  try { await db.collection(collection).doc(docId).delete(); }
+  catch (e) { alert('Error deleting: ' + e.message); }
+}
+
+function previewImg(inputId, previewId) {
+  setImgPreview(inputId, previewId);
+}
+function setImgPreview(inputId, previewId) {
+  const url = document.getElementById(inputId).value.trim();
+  const box = document.getElementById(previewId);
+  if (url) {
+    box.querySelector('img').src = url;
+    box.classList.add('show');
+  } else {
+    box.classList.remove('show');
+  }
+}
+
+function showMsg(elId, msg, type) {
+  document.getElementById(elId).innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : 'success'}" style="margin-top:10px;">${msg}</div>`;
+}
+
+function setBtnLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.textContent = loading ? 'Saving…' : (btnId.includes('tour') ? 'Save Tour' : 'Save Vehicle');
+}
+
+function esc(str) {
+  if (!str && str !== 0) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fmtDate(ts) {
+  if (!ts) return '—';
+  try { return ts.toDate().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }); }
+  catch { return '—'; }
+}
 </script>
 </body>
 </html>
