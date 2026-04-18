@@ -7,86 +7,58 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    body { background: #f0f2f5; margin:0; }
+    body { background:#f0f2f5; margin:0; }
 
-    /* Mobile top bar */
     .admin-mobile-bar {
-      display: none;
-      background: var(--deep-blue);
-      color: #fff;
-      padding: 14px 18px;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 900;
+      display:none; background:var(--deep-blue); color:#fff;
+      padding:14px 18px; align-items:center; justify-content:space-between;
+      position:sticky; top:0; z-index:900;
     }
     .admin-mobile-bar span { font-family:'Playfair Display',serif; font-weight:700; font-size:1rem; }
-    .mob-menu-btn { background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1; }
+    .mob-btn { background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer; line-height:1; padding:0; }
 
     @media(max-width:900px){
       .admin-mobile-bar { display:flex; }
       .admin-sidebar {
-        position: fixed;
-        left: -230px;
-        top: 0; bottom: 0;
-        z-index: 1000;
-        transition: left 0.22s ease;
-        overflow-y: auto;
+        position:fixed; left:-230px; top:0; bottom:0;
+        z-index:1000; transition:left .22s; overflow-y:auto;
       }
-      .admin-sidebar.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.18); }
-      .sidebar-overlay {
-        display: none;
-        position: fixed; inset:0; background:rgba(0,0,0,0.35); z-index:999;
-      }
-      .sidebar-overlay.open { display:block; }
+      .admin-sidebar.open { left:0; box-shadow:4px 0 24px rgba(0,0,0,.2); }
+      .sidebar-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:999; }
+      .sidebar-bg.open { display:block; }
     }
 
     .tab-content { display:none; }
     .tab-content.active { display:block; }
 
-    /* Image preview inside modals */
-    .img-preview-box {
-      margin-top: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-      height: 120px;
-      background: var(--light-grey);
-      display: none;
-    }
-    .img-preview-box img { width:100%; height:100%; object-fit:cover; }
+    /* Img preview in modals */
+    .img-preview-box { display:none; margin-top:8px; height:110px; border-radius:4px; overflow:hidden; background:var(--light-grey); }
     .img-preview-box.show { display:block; }
+    .img-preview-box img { width:100%; height:100%; object-fit:cover; }
 
-    /* Gallery grid in admin */
-    .admin-gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
-    }
-    .admin-gallery-item {
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      overflow: hidden;
-      background: var(--white);
-    }
-    .admin-gallery-item img { width:100%; height:110px; object-fit:cover; display:block; }
-    .admin-gallery-item .gal-footer {
-      padding: 7px 8px;
-      display: flex;
-      justify-content: center;
-      border-top: 1px solid var(--light-grey);
-    }
+    /* Gallery grid */
+    .gal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+    .gal-item { border:1px solid var(--border); border-radius:5px; overflow:hidden; background:#fff; }
+    .gal-item img { width:100%; height:110px; object-fit:cover; display:block; }
+    .gal-item-foot { padding:7px; text-align:center; border-top:1px solid var(--light-grey); }
 
-    /* Table overflow on small screens */
-    .table-wrap { overflow-x: auto; }
+    /* Table helpers */
+    .tbl-wrap { overflow-x:auto; }
+    .admin-nav a.active { background:rgba(255,255,255,.1); color:var(--gold-light) !important; }
 
-    /* Highlight active sidebar link */
-    .admin-nav a.active { background:rgba(255,255,255,0.1); color:var(--gold-light) !important; }
+    /* Seed banner */
+    .seed-banner {
+      background:#e8f3ff; border:1px solid #b3d4f5; border-radius:6px;
+      padding:14px 18px; margin-bottom:20px; font-size:.9rem; color:#1a4a7a;
+      display:none; align-items:center; gap:10px;
+    }
+    .seed-banner.show { display:flex; }
+    .seed-banner strong { font-weight:600; }
   </style>
 </head>
 <body>
 
-<!-- ======== LOGIN ======== -->
+<!-- ── LOGIN ── -->
 <div id="login-screen" class="admin-login-wrap">
   <div class="admin-login-card">
     <div class="logo" style="justify-content:center;margin-bottom:20px;">
@@ -101,28 +73,30 @@
     <div id="login-msg"></div>
     <div class="form-group">
       <label>Email</label>
-      <input type="email" id="admin-email" placeholder="admin@triptunes.com" autocomplete="username">
+      <input type="email" id="login-email" placeholder="admin@triptunes.com" autocomplete="username">
     </div>
     <div class="form-group">
       <label>Password</label>
-      <input type="password" id="admin-pass" placeholder="Password" autocomplete="current-password"
-             onkeydown="if(event.key==='Enter') adminLogin()">
+      <input type="password" id="login-pass" placeholder="Password" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="adminLogin()">Sign In</button>
+    <button class="btn btn-primary" style="width:100%;margin-top:4px;" onclick="doLogin()">Sign In</button>
   </div>
 </div>
 
-<!-- ======== SIDEBAR OVERLAY (mobile) ======== -->
-<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<!-- ── SIDEBAR OVERLAY ── -->
+<div class="sidebar-bg" id="sidebar-bg" onclick="closeSidebar()"></div>
 
-<!-- ======== DASHBOARD ======== -->
+<!-- ── MAIN APP ── -->
 <div id="admin-screen" style="display:none;">
+
   <div class="admin-mobile-bar">
     <span>Trip Tunes Admin</span>
-    <button class="mob-menu-btn" onclick="openSidebar()">&#9776;</button>
+    <button class="mob-btn" onclick="openSidebar()">&#9776;</button>
   </div>
 
   <div class="admin-layout">
+
     <!-- Sidebar -->
     <aside class="admin-sidebar" id="admin-sidebar">
       <div class="admin-logo">
@@ -131,81 +105,87 @@
       </div>
       <nav class="admin-nav">
         <div class="admin-nav-label">Main</div>
-        <a href="#" id="nav-dashboard"  class="active" onclick="showTab('dashboard',this);return false;">📊 Dashboard</a>
-        <a href="#" id="nav-inquiries"           onclick="showTab('inquiries',this);return false;">📩 Inquiries</a>
-        <div class="admin-nav-label">Content</div>
-        <a href="#" id="nav-tours"               onclick="showTab('tours',this);return false;">🗺️ Tour Packages</a>
-        <a href="#" id="nav-vehicles"            onclick="showTab('vehicles',this);return false;">🚗 Vehicles</a>
-        <a href="#" id="nav-gallery"             onclick="showTab('gallery',this);return false;">🖼️ Gallery</a>
+        <a href="#" id="nl-dashboard" class="active" onclick="showTab('dashboard',this);return false;">📊 Dashboard</a>
+        <a href="#" id="nl-inquiries"          onclick="showTab('inquiries',this);return false;">📩 Inquiries</a>
+        <div class="admin-nav-label">Manage Content</div>
+        <a href="#" id="nl-tours"              onclick="showTab('tours',this);return false;">🗺️ Tour Packages</a>
+        <a href="#" id="nl-vehicles"           onclick="showTab('vehicles',this);return false;">🚗 Vehicles / Cabs</a>
+        <a href="#" id="nl-gallery"            onclick="showTab('gallery',this);return false;">🖼️ Gallery</a>
         <div class="admin-nav-label">Account</div>
         <a href="index.html" target="_blank">🌐 View Website</a>
-        <a href="#" onclick="adminLogout();return false;">🚪 Sign Out</a>
+        <a href="#" onclick="doLogout();return false;">🚪 Sign Out</a>
       </nav>
     </aside>
 
-    <!-- Main area -->
+    <!-- Main -->
     <div class="admin-main">
       <div class="admin-topbar">
         <h2 id="topbar-title">Dashboard</h2>
-        <span id="admin-user-email" style="font-size:0.85rem;color:var(--mid-grey);"></span>
+        <span id="topbar-user" style="font-size:.85rem;color:var(--mid-grey);"></span>
       </div>
 
       <div class="admin-content">
 
-        <!-- ===== DASHBOARD ===== -->
+        <!-- SEED BANNER -->
+        <div class="seed-banner" id="seed-banner">
+          <span>⏳</span>
+          <div><strong>Setting up for first use…</strong> Loading your default packages, vehicles, and gallery into the database. This only happens once.</div>
+        </div>
+
+        <!-- ── DASHBOARD ── -->
         <div id="tab-dashboard" class="tab-content active">
           <div class="admin-stats">
-            <div class="stat-card"><div class="stat-val" id="s-inq">—</div><div class="stat-label">Inquiries</div></div>
-            <div class="stat-card"><div class="stat-val" id="s-tours">—</div><div class="stat-label">Tour Packages</div></div>
-            <div class="stat-card"><div class="stat-val" id="s-veh">—</div><div class="stat-label">Vehicles</div></div>
-            <div class="stat-card"><div class="stat-val" id="s-gal">—</div><div class="stat-label">Gallery Images</div></div>
+            <div class="stat-card"><div class="stat-val" id="sc-inq">—</div><div class="stat-label">Inquiries</div></div>
+            <div class="stat-card"><div class="stat-val" id="sc-tours">—</div><div class="stat-label">Tour Packages</div></div>
+            <div class="stat-card"><div class="stat-val" id="sc-veh">—</div><div class="stat-label">Vehicles</div></div>
+            <div class="stat-card"><div class="stat-val" id="sc-gal">—</div><div class="stat-label">Gallery Images</div></div>
           </div>
           <div class="admin-panel">
             <div class="admin-panel-header"><h3>Recent Inquiries</h3></div>
-            <div class="admin-panel-body" id="dash-recent"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+            <div class="admin-panel-body" id="dash-inq"><div class="spinner-wrap"><div class="spinner"></div></div></div>
           </div>
         </div>
 
-        <!-- ===== INQUIRIES ===== -->
+        <!-- ── INQUIRIES ── -->
         <div id="tab-inquiries" class="tab-content">
           <div class="admin-panel">
             <div class="admin-panel-header">
               <h3>All Inquiries</h3>
-              <span id="inq-count" style="font-size:0.82rem;color:var(--mid-grey);"></span>
+              <span id="inq-total" style="font-size:.82rem;color:var(--mid-grey);"></span>
             </div>
             <div class="admin-panel-body">
-              <div class="table-wrap" id="inq-table"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+              <div class="tbl-wrap" id="inq-body"><div class="spinner-wrap"><div class="spinner"></div></div></div>
             </div>
           </div>
         </div>
 
-        <!-- ===== TOURS ===== -->
+        <!-- ── TOURS ── -->
         <div id="tab-tours" class="tab-content">
           <div class="admin-panel">
             <div class="admin-panel-header">
               <h3>Tour Packages</h3>
-              <button class="btn btn-primary btn-sm" onclick="openTourModal()">+ Add Tour</button>
+              <button class="btn btn-primary btn-sm" onclick="openTourModal(null)">+ Add New Tour</button>
             </div>
             <div class="admin-panel-body">
-              <div class="table-wrap" id="tours-table"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+              <div class="tbl-wrap" id="tours-body"><div class="spinner-wrap"><div class="spinner"></div></div></div>
             </div>
           </div>
         </div>
 
-        <!-- ===== VEHICLES ===== -->
+        <!-- ── VEHICLES ── -->
         <div id="tab-vehicles" class="tab-content">
           <div class="admin-panel">
             <div class="admin-panel-header">
-              <h3>Vehicles</h3>
-              <button class="btn btn-primary btn-sm" onclick="openVehicleModal()">+ Add Vehicle</button>
+              <h3>Vehicles / Cabs</h3>
+              <button class="btn btn-primary btn-sm" onclick="openVehicleModal(null)">+ Add New Vehicle</button>
             </div>
             <div class="admin-panel-body">
-              <div class="table-wrap" id="vehicles-table"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+              <div class="tbl-wrap" id="vehicles-body"><div class="spinner-wrap"><div class="spinner"></div></div></div>
             </div>
           </div>
         </div>
 
-        <!-- ===== GALLERY ===== -->
+        <!-- ── GALLERY ── -->
         <div id="tab-gallery" class="tab-content">
           <div class="admin-panel">
             <div class="admin-panel-header">
@@ -213,40 +193,57 @@
               <button class="btn btn-primary btn-sm" onclick="openGalleryModal()">+ Add Image</button>
             </div>
             <div class="admin-panel-body">
-              <div id="gallery-grid-admin"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+              <div id="gallery-body"><div class="spinner-wrap"><div class="spinner"></div></div></div>
             </div>
           </div>
         </div>
 
-      </div><!-- /admin-content -->
-    </div><!-- /admin-main -->
-  </div><!-- /admin-layout -->
-</div><!-- /admin-screen -->
+      </div>
+    </div>
+  </div>
+</div>
 
 
-<!-- ======== MODAL: ADD / EDIT TOUR ======== -->
+<!-- ══════════════ MODAL: TOUR ══════════════ -->
 <div class="modal-overlay" id="modal-tour">
   <div class="modal">
-    <h3 id="tour-modal-h">Add Tour Package</h3>
-    <input type="hidden" id="t-id">
-    <div class="form-group"><label>Tour Name *</label><input type="text" id="t-name" placeholder="e.g. Gulmarg Tour"></div>
-    <div class="form-group"><label>Short Description</label><textarea id="t-desc" rows="3" placeholder="A brief description shown on the card..."></textarea></div>
-    <div class="form-group"><label>Duration</label><input type="text" id="t-duration" placeholder="e.g. 2 Nights / 3 Days"></div>
-    <div class="form-group"><label>Price (₹ per person)</label><input type="number" id="t-price" placeholder="Leave blank to show 'Contact for Price'"></div>
+    <h3 id="tour-modal-title">Add Tour Package</h3>
+    <input type="hidden" id="t-docid">
+
     <div class="form-group">
-      <label>Image URL</label>
-      <input type="url" id="t-image" placeholder="https://images.unsplash.com/photo-..." oninput="previewImg('t-image','t-img-preview')">
-      <div class="img-preview-box" id="t-img-preview"><img src="" alt="preview"></div>
+      <label>Tour Name <span style="color:red">*</span></label>
+      <input type="text" id="t-name" placeholder="e.g. Gulmarg Weekend Tour">
     </div>
     <div class="form-group">
-      <label>Highlights <span style="font-weight:400;color:var(--mid-grey);">(one per line)</span></label>
-      <textarea id="t-highlights" rows="5" placeholder="Dal Lake Shikara ride&#10;Gulmarg Gondola&#10;Pahalgam valley walk"></textarea>
+      <label>Short Description</label>
+      <textarea id="t-desc" rows="3" placeholder="A brief description shown on the card..."></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="form-group">
+        <label>Duration</label>
+        <input type="text" id="t-duration" placeholder="e.g. 2 Nights / 3 Days">
+      </div>
+      <div class="form-group">
+        <label>Price (₹ per person)</label>
+        <input type="number" id="t-price" placeholder="Leave blank = Contact for Price">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Image URL</label>
+      <input type="url" id="t-image" placeholder="https://images.unsplash.com/photo-..."
+             oninput="livePreview('t-image','t-preview')">
+      <div class="img-preview-box" id="t-preview"><img src="" alt="preview"></div>
+    </div>
+    <div class="form-group">
+      <label>Highlights <small style="color:var(--mid-grey);font-weight:400;">(one per line)</small></label>
+      <textarea id="t-highlights" rows="5"
+        placeholder="Dal Lake Shikara ride&#10;Gulmarg Gondola&#10;Pahalgam valley walk"></textarea>
     </div>
     <div class="form-group" style="display:flex;align-items:center;gap:10px;">
       <input type="checkbox" id="t-featured" style="width:auto;cursor:pointer;">
-      <label for="t-featured" style="margin:0;cursor:pointer;">Mark as Featured</label>
+      <label for="t-featured" style="margin:0;cursor:pointer;font-weight:500;">Mark as Featured</label>
     </div>
-    <div id="tour-save-msg"></div>
+    <div id="tour-msg"></div>
     <div class="modal-actions">
       <button class="btn btn-outline btn-sm" onclick="closeModal('modal-tour')">Cancel</button>
       <button class="btn btn-primary btn-sm" id="tour-save-btn" onclick="saveTour()">Save Tour</button>
@@ -254,21 +251,38 @@
   </div>
 </div>
 
-<!-- ======== MODAL: ADD / EDIT VEHICLE ======== -->
+
+<!-- ══════════════ MODAL: VEHICLE ══════════════ -->
 <div class="modal-overlay" id="modal-vehicle">
   <div class="modal">
-    <h3 id="vehicle-modal-h">Add Vehicle</h3>
-    <input type="hidden" id="v-id">
-    <div class="form-group"><label>Vehicle Name *</label><input type="text" id="v-name" placeholder="e.g. Toyota Innova Crysta"></div>
-    <div class="form-group"><label>Subtitle / Description</label><input type="text" id="v-subtitle" placeholder="e.g. For families, 5–7 passengers"></div>
-    <div class="form-group"><label>Specs <span style="font-weight:400;color:var(--mid-grey);">(comma separated)</span></label><input type="text" id="v-specs" placeholder="5–7 Passengers, A/C, Mountain Ready"></div>
-    <div class="form-group"><label>Price per day (₹)</label><input type="number" id="v-price" placeholder="Leave blank to hide price"></div>
+    <h3 id="vehicle-modal-title">Add Vehicle</h3>
+    <input type="hidden" id="v-docid">
+
+    <div class="form-group">
+      <label>Vehicle Name <span style="color:red">*</span></label>
+      <input type="text" id="v-name" placeholder="e.g. Toyota Innova Crysta">
+    </div>
+    <div class="form-group">
+      <label>Subtitle / Short Description</label>
+      <input type="text" id="v-subtitle" placeholder="e.g. For families, 5–7 passengers">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="form-group">
+        <label>Specs <small style="color:var(--mid-grey);font-weight:400;">(comma separated)</small></label>
+        <input type="text" id="v-specs" placeholder="5–7 Passengers, A/C, Mountain Ready">
+      </div>
+      <div class="form-group">
+        <label>Price per day (₹)</label>
+        <input type="number" id="v-price" placeholder="Leave blank to hide price">
+      </div>
+    </div>
     <div class="form-group">
       <label>Image URL</label>
-      <input type="url" id="v-image" placeholder="https://images.unsplash.com/photo-..." oninput="previewImg('v-image','v-img-preview')">
-      <div class="img-preview-box" id="v-img-preview"><img src="" alt="preview"></div>
+      <input type="url" id="v-image" placeholder="https://images.unsplash.com/photo-..."
+             oninput="livePreview('v-image','v-preview')">
+      <div class="img-preview-box" id="v-preview"><img src="" alt="preview"></div>
     </div>
-    <div id="vehicle-save-msg"></div>
+    <div id="vehicle-msg"></div>
     <div class="modal-actions">
       <button class="btn btn-outline btn-sm" onclick="closeModal('modal-vehicle')">Cancel</button>
       <button class="btn btn-primary btn-sm" id="vehicle-save-btn" onclick="saveVehicle()">Save Vehicle</button>
@@ -276,77 +290,90 @@
   </div>
 </div>
 
-<!-- ======== MODAL: ADD GALLERY IMAGE ======== -->
+
+<!-- ══════════════ MODAL: GALLERY ══════════════ -->
 <div class="modal-overlay" id="modal-gallery">
   <div class="modal">
     <h3>Add Gallery Image</h3>
     <div class="form-group">
-      <label>Image URL *</label>
-      <input type="url" id="g-image" placeholder="https://images.unsplash.com/photo-..." oninput="previewImg('g-image','g-img-preview')">
-      <div class="img-preview-box" id="g-img-preview"><img src="" alt="preview"></div>
+      <label>Image URL <span style="color:red">*</span></label>
+      <input type="url" id="g-image" placeholder="https://images.unsplash.com/photo-..."
+             oninput="livePreview('g-image','g-preview')">
+      <div class="img-preview-box" id="g-preview"><img src="" alt="preview"></div>
     </div>
-    <p style="font-size:0.82rem;color:var(--mid-grey);margin-top:8px;">Paste a direct image URL from Unsplash or Google. It will appear in the public gallery immediately.</p>
-    <div id="gallery-save-msg"></div>
+    <p style="font-size:.82rem;color:var(--mid-grey);margin-top:6px;">
+      Paste any direct image URL (Unsplash, Google Images). It will appear in the public gallery immediately.
+    </p>
+    <div id="gallery-msg"></div>
     <div class="modal-actions">
       <button class="btn btn-outline btn-sm" onclick="closeModal('modal-gallery')">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveGalleryImage()">Add to Gallery</button>
+      <button class="btn btn-primary btn-sm" id="gallery-save-btn" onclick="saveGalleryImage()">Add to Gallery</button>
     </div>
   </div>
 </div>
 
 
-<!-- ======== FIREBASE + SCRIPTS ======== -->
+<!-- ══════════════ FIREBASE + LOGIC ══════════════ -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="js/firebase.js"></script>
 
 <script>
-// ─────────────────────────────────────────────
-// Sidebar helpers
-// ─────────────────────────────────────────────
-function openSidebar() {
+// ─────────────────────────────────
+// Sidebar
+// ─────────────────────────────────
+function openSidebar()  {
   document.getElementById('admin-sidebar').classList.add('open');
-  document.getElementById('sidebar-overlay').classList.add('open');
+  document.getElementById('sidebar-bg').classList.add('open');
 }
 function closeSidebar() {
   document.getElementById('admin-sidebar').classList.remove('open');
-  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.getElementById('sidebar-bg').classList.remove('open');
 }
 
-// ─────────────────────────────────────────────
+// ─────────────────────────────────
 // Auth
-// ─────────────────────────────────────────────
-auth.onAuthStateChanged(user => {
+// ─────────────────────────────────
+auth.onAuthStateChanged(async user => {
   if (user) {
-    document.getElementById('login-screen').style.display  = 'none';
-    document.getElementById('admin-screen').style.display  = 'block';
-    document.getElementById('admin-user-email').textContent = user.email;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    document.getElementById('topbar-user').textContent    = user.email;
+
+    // ★ SEED default data on first login
+    document.getElementById('seed-banner').classList.add('show');
+    await seedDefaultData();
+    document.getElementById('seed-banner').classList.remove('show');
+
+    // Start dashboard listeners
     startDashboard();
+    startListeners(); // kick off all real-time listeners immediately
   } else {
-    document.getElementById('login-screen').style.display  = 'flex';
-    document.getElementById('admin-screen').style.display  = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-screen').style.display = 'none';
   }
 });
 
-function adminLogin() {
-  const email = document.getElementById('admin-email').value.trim();
-  const pass  = document.getElementById('admin-pass').value;
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
   const msg   = document.getElementById('login-msg');
-  if (!email || !pass) { msg.innerHTML = '<div class="alert alert-error">Please enter email and password.</div>'; return; }
+  if (!email || !pass) { msg.innerHTML = '<div class="alert alert-error">Enter email and password.</div>'; return; }
   msg.innerHTML = '<div class="alert">Signing in…</div>';
   auth.signInWithEmailAndPassword(email, pass)
     .then(() => msg.innerHTML = '')
     .catch(err => msg.innerHTML = `<div class="alert alert-error">${err.message}</div>`);
 }
-function adminLogout() { auth.signOut(); }
+function doLogout() { auth.signOut(); }
 
-// ─────────────────────────────────────────────
+// ─────────────────────────────────
 // Tab navigation
-// ─────────────────────────────────────────────
-const TAB_LABELS = { dashboard:'Dashboard', inquiries:'Inquiries', tours:'Tour Packages', vehicles:'Vehicles', gallery:'Gallery' };
-const tabListeners = {}; // track active listeners to avoid duplicates
-
+// ─────────────────────────────────
+const TAB_LABELS = {
+  dashboard:'Dashboard', inquiries:'Inquiries',
+  tours:'Tour Packages', vehicles:'Vehicles / Cabs', gallery:'Gallery'
+};
 function showTab(name, el) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
@@ -354,308 +381,326 @@ function showTab(name, el) {
   el.classList.add('active');
   document.getElementById('topbar-title').textContent = TAB_LABELS[name] || name;
   closeSidebar();
-
-  if (!tabListeners[name]) {
-    tabListeners[name] = true;
-    if (name === 'inquiries') listenInquiries();
-    if (name === 'tours')     listenTours();
-    if (name === 'vehicles')  listenVehicles();
-    if (name === 'gallery')   listenGalleryAdmin();
-  }
 }
 
-// ─────────────────────────────────────────────
-// Dashboard
-// ─────────────────────────────────────────────
+// ─────────────────────────────────
+// Start ALL real-time listeners once after login
+// So every tab is ready the moment you click it
+// ─────────────────────────────────
+function startListeners() {
+  listenInquiries();
+  listenTours();
+  listenVehicles();
+  listenGallery();
+}
+
+// ─────────────────────────────────
+// Dashboard counters + recent inquiries
+// ─────────────────────────────────
 function startDashboard() {
-  // Count badges via one-time gets
-  ['inquiries','tours','vehicles','gallery'].forEach((col, i) => {
-    const ids = ['s-inq','s-tours','s-veh','s-gal'];
-    db.collection(col).get().then(s => { document.getElementById(ids[i]).textContent = s.size; }).catch(() => {});
+  const cols = [
+    ['inquiries','sc-inq'],
+    ['tours','sc-tours'],
+    ['vehicles','sc-veh'],
+    ['gallery','sc-gal']
+  ];
+  cols.forEach(([col, elId]) => {
+    db.collection(col).onSnapshot(snap => {
+      document.getElementById(elId).textContent = snap.size;
+    });
   });
 
-  // Recent inquiries (real-time)
   db.collection('inquiries').orderBy('date','desc').limit(6).onSnapshot(snap => {
-    const el = document.getElementById('dash-recent');
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);font-size:0.9rem;">No inquiries yet.</p>'; return; }
-    let html = `<div class="table-wrap"><table class="admin-table">
-      <thead><tr><th>Name</th><th>Phone</th><th>Package</th><th>Date</th></tr></thead><tbody>`;
-    snap.forEach(d => {
-      const i = d.data();
-      html += `<tr>
-        <td><strong>${esc(i.name)}</strong></td>
-        <td><a href="tel:${esc(i.phone)}">${esc(i.phone)}</a></td>
-        <td>${esc(i.packageName)}</td>
-        <td>${fmtDate(i.date)}</td>
-      </tr>`;
-    });
-    html += '</tbody></table></div>';
-    el.innerHTML = html;
-  }, () => { document.getElementById('dash-recent').innerHTML = '<p style="color:var(--mid-grey);">Could not load inquiries.</p>'; });
+    const el = document.getElementById('dash-inq');
+    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);font-size:.9rem;padding:8px 0;">No inquiries yet.</p>'; return; }
+    el.innerHTML = buildInqTable(snap, true);
+  });
 }
 
-// ─────────────────────────────────────────────
-// Inquiries — real-time
-// ─────────────────────────────────────────────
+// ─────────────────────────────────
+// INQUIRIES
+// ─────────────────────────────────
 function listenInquiries() {
   db.collection('inquiries').orderBy('date','desc').onSnapshot(snap => {
-    document.getElementById('inq-count').textContent = snap.size + ' total';
-    const el = document.getElementById('inq-table');
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No inquiries yet.</p>'; return; }
-    let html = `<table class="admin-table">
-      <thead><tr><th>Name</th><th>Phone</th><th>Package</th><th>Message</th><th>Date</th><th></th></tr></thead><tbody>`;
-    snap.forEach(d => {
-      const i = d.data();
-      const wa = `https://wa.me/${(i.phone||'').replace(/\D/g,'')}?text=Hi%20${encodeURIComponent(i.name||'')}%2C%20thank%20you%20for%20contacting%20Trip%20Tunes!`;
-      html += `<tr>
-        <td><strong>${esc(i.name)}</strong></td>
-        <td><a href="tel:${esc(i.phone)}">${esc(i.phone)}</a></td>
-        <td>${esc(i.packageName)}</td>
-        <td style="max-width:180px;font-size:0.82rem;">${esc((i.message||'').substring(0,80))}${(i.message||'').length>80?'…':''}</td>
-        <td style="white-space:nowrap;">${fmtDate(i.date)}</td>
-        <td style="white-space:nowrap;">
-          <a href="${wa}" target="_blank" class="action-btn">WhatsApp</a>
-          <button class="action-btn del" onclick="del('inquiries','${d.id}')">Delete</button>
-        </td>
-      </tr>`;
-    });
-    html += '</tbody></table>';
-    el.innerHTML = html;
-  }, () => { document.getElementById('inq-table').innerHTML = '<p style="color:var(--mid-grey);">Could not load.</p>'; });
+    document.getElementById('inq-total').textContent = snap.size + ' total';
+    document.getElementById('inq-body').innerHTML = snap.empty
+      ? '<p style="color:var(--mid-grey);padding:16px 0;">No inquiries yet.</p>'
+      : buildInqTable(snap, false);
+  });
 }
 
-// ─────────────────────────────────────────────
-// Tours — real-time
-// ─────────────────────────────────────────────
+function buildInqTable(snap, compact) {
+  let h = `<table class="admin-table"><thead><tr>
+    <th>Name</th><th>Phone</th><th>Package</th>
+    ${compact ? '' : '<th>Message</th>'}
+    <th>Date</th><th></th>
+  </tr></thead><tbody>`;
+  snap.forEach(d => {
+    const i = d.data();
+    const waUrl = `https://wa.me/${(i.phone||'').replace(/\D/g,'')}?text=Hi%20${encodeURIComponent(i.name||'')}%2C%20thank%20you%20for%20contacting%20Trip%20Tunes!`;
+    h += `<tr>
+      <td><strong>${x(i.name)}</strong></td>
+      <td><a href="tel:${x(i.phone)}">${x(i.phone)}</a></td>
+      <td>${x(i.packageName)}</td>
+      ${compact ? '' : `<td style="max-width:180px;font-size:.82rem;">${x((i.message||'').slice(0,80))}${(i.message||'').length>80?'…':''}</td>`}
+      <td style="white-space:nowrap;">${fmtDate(i.date)}</td>
+      <td style="white-space:nowrap;">
+        <a href="${waUrl}" target="_blank" class="action-btn">WhatsApp</a>
+        <button class="action-btn del" onclick="del('inquiries','${d.id}')">Delete</button>
+      </td>
+    </tr>`;
+  });
+  return h + '</tbody></table>';
+}
+
+// ─────────────────────────────────
+// TOURS — real-time listener + CRUD
+// ─────────────────────────────────
 function listenTours() {
   db.collection('tours').orderBy('name').onSnapshot(snap => {
-    const el = document.getElementById('tours-table');
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No tours yet. Click "+ Add Tour" to create your first package.</p>'; return; }
-    let html = `<table class="admin-table">
-      <thead><tr><th>Image</th><th>Name</th><th>Duration</th><th>Price</th><th>Featured</th><th></th></tr></thead><tbody>`;
+    const el = document.getElementById('tours-body');
+    if (snap.empty) {
+      el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No tour packages found. Click "+ Add New Tour" to create one.</p>';
+      return;
+    }
+    let h = `<table class="admin-table"><thead><tr>
+      <th>Image</th><th>Tour Name</th><th>Duration</th><th>Price</th><th>Featured</th><th>Actions</th>
+    </tr></thead><tbody>`;
     snap.forEach(d => {
       const t = d.data();
-      html += `<tr>
-        <td>${t.image ? `<img src="${esc(t.image)}" alt="${esc(t.name)}" style="width:52px;height:40px;object-fit:cover;border-radius:3px;">` : '—'}</td>
-        <td><strong>${esc(t.name)}</strong><br><span style="font-size:0.78rem;color:var(--mid-grey);">${esc((t.description||'').substring(0,55))}…</span></td>
-        <td>${esc(t.duration)}</td>
-        <td>${t.price ? '₹'+t.price : '—'}</td>
-        <td>${t.featured ? '⭐ Yes' : 'No'}</td>
+      h += `<tr>
+        <td>${t.image
+          ? `<img src="${x(t.image)}" style="width:54px;height:42px;object-fit:cover;border-radius:3px;" alt="${x(t.name)}">`
+          : '<span style="color:var(--mid-grey);font-size:.8rem;">No img</span>'}</td>
+        <td>
+          <strong>${x(t.name)}</strong><br>
+          <span style="font-size:.78rem;color:var(--mid-grey);">${x((t.description||'').slice(0,55))}${(t.description||'').length>55?'…':''}</span>
+        </td>
+        <td style="white-space:nowrap;">${x(t.duration)}</td>
+        <td style="white-space:nowrap;">${t.price ? '₹'+t.price : '<span style="color:var(--mid-grey)">—</span>'}</td>
+        <td>${t.featured ? '⭐ Yes' : '<span style="color:var(--mid-grey)">No</span>'}</td>
         <td style="white-space:nowrap;">
-          <button class="action-btn" onclick="editTour('${d.id}')">Edit</button>
-          <button class="action-btn del" onclick="del('tours','${d.id}')">Delete</button>
+          <button class="action-btn" onclick="openTourModal('${d.id}')">✏️ Edit</button>
+          <button class="action-btn del" onclick="del('tours','${d.id}')">🗑 Delete</button>
         </td>
       </tr>`;
     });
-    html += '</tbody></table>';
-    el.innerHTML = html;
-  }, () => { document.getElementById('tours-table').innerHTML = '<p style="color:var(--mid-grey);">Could not load.</p>'; });
+    el.innerHTML = h + '</tbody></table>';
+  });
 }
 
-// Open blank tour modal
-function openTourModal() {
-  document.getElementById('tour-modal-h').textContent = 'Add Tour Package';
-  document.getElementById('t-id').value = '';
-  document.getElementById('t-name').value = '';
-  document.getElementById('t-desc').value = '';
-  document.getElementById('t-duration').value = '';
-  document.getElementById('t-price').value = '';
-  document.getElementById('t-image').value = '';
-  document.getElementById('t-highlights').value = '';
+async function openTourModal(docId) {
+  // Reset form
+  ['t-name','t-desc','t-duration','t-price','t-image','t-highlights'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('t-featured').checked = false;
-  document.getElementById('t-img-preview').classList.remove('show');
-  document.getElementById('tour-save-msg').innerHTML = '';
-  openModal('modal-tour');
-}
+  document.getElementById('t-docid').value = '';
+  document.getElementById('t-preview').classList.remove('show');
+  document.getElementById('tour-msg').innerHTML = '';
+  document.getElementById('tour-modal-title').textContent = docId ? 'Edit Tour Package' : 'Add Tour Package';
+  document.getElementById('tour-save-btn').textContent = 'Save Tour';
+  document.getElementById('tour-save-btn').disabled = false;
 
-// Edit existing tour
-async function editTour(docId) {
-  const snap = await db.collection('tours').doc(docId).get();
-  if (!snap.exists) return;
-  const t = snap.data();
-  document.getElementById('tour-modal-h').textContent = 'Edit Tour Package';
-  document.getElementById('t-id').value = docId;
-  document.getElementById('t-name').value = t.name || '';
-  document.getElementById('t-desc').value = t.description || '';
-  document.getElementById('t-duration').value = t.duration || '';
-  document.getElementById('t-price').value = t.price || '';
-  document.getElementById('t-image').value = t.image || '';
-  document.getElementById('t-highlights').value = Array.isArray(t.highlights) ? t.highlights.join('\n') : '';
-  document.getElementById('t-featured').checked = !!t.featured;
-  document.getElementById('tour-save-msg').innerHTML = '';
-  setImgPreview('t-image', 't-img-preview');
+  if (docId) {
+    // Load existing data into form
+    const snap = await db.collection('tours').doc(docId).get();
+    if (!snap.exists) return;
+    const t = snap.data();
+    document.getElementById('t-docid').value      = docId;
+    document.getElementById('t-name').value       = t.name || '';
+    document.getElementById('t-desc').value       = t.description || '';
+    document.getElementById('t-duration').value   = t.duration || '';
+    document.getElementById('t-price').value      = t.price || '';
+    document.getElementById('t-image').value      = t.image || '';
+    document.getElementById('t-highlights').value = Array.isArray(t.highlights) ? t.highlights.join('\n') : '';
+    document.getElementById('t-featured').checked = !!t.featured;
+    if (t.image) {
+      document.getElementById('t-preview').querySelector('img').src = t.image;
+      document.getElementById('t-preview').classList.add('show');
+    }
+  }
   openModal('modal-tour');
 }
 
 async function saveTour() {
   const name = document.getElementById('t-name').value.trim();
-  if (!name) { showMsg('tour-save-msg', 'Tour name is required.', 'error'); return; }
+  if (!name) { flashMsg('tour-msg', 'Tour name is required.', 'error'); return; }
 
-  setBtnLoading('tour-save-btn', true);
-  const docId = document.getElementById('t-id').value;
+  setBtn('tour-save-btn', 'Saving…', true);
+  const docId = document.getElementById('t-docid').value;
   const data  = {
     name,
     description : document.getElementById('t-desc').value.trim(),
     duration    : document.getElementById('t-duration').value.trim(),
     price       : document.getElementById('t-price').value ? Number(document.getElementById('t-price').value) : null,
     image       : document.getElementById('t-image').value.trim(),
-    highlights  : document.getElementById('t-highlights').value.split('\n').map(h => h.trim()).filter(Boolean),
+    highlights  : document.getElementById('t-highlights').value.split('\n').map(s=>s.trim()).filter(Boolean),
     featured    : document.getElementById('t-featured').checked
   };
 
   try {
-    if (docId) { await db.collection('tours').doc(docId).set(data); }
-    else       { await db.collection('tours').add(data); }
+    if (docId) await db.collection('tours').doc(docId).set(data);  // full overwrite = edit
+    else       await db.collection('tours').add(data);             // new doc
     closeModal('modal-tour');
-    // listener auto-refreshes the table
-  } catch (e) {
-    showMsg('tour-save-msg', 'Error: ' + e.message, 'error');
+  } catch(e) {
+    flashMsg('tour-msg', 'Error: ' + e.message, 'error');
+    setBtn('tour-save-btn', 'Save Tour', false);
   }
-  setBtnLoading('tour-save-btn', false);
 }
 
-// ─────────────────────────────────────────────
-// Vehicles — real-time
-// ─────────────────────────────────────────────
+// ─────────────────────────────────
+// VEHICLES — real-time listener + CRUD
+// ─────────────────────────────────
 function listenVehicles() {
   db.collection('vehicles').orderBy('name').onSnapshot(snap => {
-    const el = document.getElementById('vehicles-table');
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No vehicles yet. Click "+ Add Vehicle" to create one.</p>'; return; }
-    let html = `<table class="admin-table">
-      <thead><tr><th>Image</th><th>Name</th><th>Subtitle</th><th>Price/Day</th><th></th></tr></thead><tbody>`;
+    const el = document.getElementById('vehicles-body');
+    if (snap.empty) {
+      el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No vehicles found. Click "+ Add New Vehicle" to create one.</p>';
+      return;
+    }
+    let h = `<table class="admin-table"><thead><tr>
+      <th>Image</th><th>Name</th><th>Subtitle</th><th>Specs</th><th>Price/Day</th><th>Actions</th>
+    </tr></thead><tbody>`;
     snap.forEach(d => {
       const v = d.data();
-      html += `<tr>
-        <td>${v.image ? `<img src="${esc(v.image)}" alt="${esc(v.name)}" style="width:52px;height:40px;object-fit:cover;border-radius:3px;">` : '—'}</td>
-        <td><strong>${esc(v.name)}</strong></td>
-        <td style="font-size:0.84rem;">${esc(v.subtitle)}</td>
-        <td>${v.price ? '₹'+v.price : '—'}</td>
+      const specTags = Array.isArray(v.specs)
+        ? v.specs.map(s => `<span class="spec-tag" style="font-size:.72rem;">${x(s)}</span>`).join(' ')
+        : '';
+      h += `<tr>
+        <td>${v.image
+          ? `<img src="${x(v.image)}" style="width:54px;height:42px;object-fit:cover;border-radius:3px;" alt="${x(v.name)}">`
+          : '<span style="color:var(--mid-grey);font-size:.8rem;">No img</span>'}</td>
+        <td><strong>${x(v.name)}</strong></td>
+        <td style="font-size:.84rem;">${x(v.subtitle)}</td>
+        <td style="font-size:.8rem;">${specTags}</td>
+        <td style="white-space:nowrap;">${v.price ? '₹'+v.price : '<span style="color:var(--mid-grey)">—</span>'}</td>
         <td style="white-space:nowrap;">
-          <button class="action-btn" onclick="editVehicle('${d.id}')">Edit</button>
-          <button class="action-btn del" onclick="del('vehicles','${d.id}')">Delete</button>
+          <button class="action-btn" onclick="openVehicleModal('${d.id}')">✏️ Edit</button>
+          <button class="action-btn del" onclick="del('vehicles','${d.id}')">🗑 Delete</button>
         </td>
       </tr>`;
     });
-    html += '</tbody></table>';
-    el.innerHTML = html;
-  }, () => { document.getElementById('vehicles-table').innerHTML = '<p style="color:var(--mid-grey);">Could not load.</p>'; });
+    el.innerHTML = h + '</tbody></table>';
+  });
 }
 
-function openVehicleModal() {
-  document.getElementById('vehicle-modal-h').textContent = 'Add Vehicle';
-  document.getElementById('v-id').value = '';
-  document.getElementById('v-name').value = '';
-  document.getElementById('v-subtitle').value = '';
-  document.getElementById('v-specs').value = '';
-  document.getElementById('v-price').value = '';
-  document.getElementById('v-image').value = '';
-  document.getElementById('v-img-preview').classList.remove('show');
-  document.getElementById('vehicle-save-msg').innerHTML = '';
-  openModal('modal-vehicle');
-}
+async function openVehicleModal(docId) {
+  ['v-name','v-subtitle','v-specs','v-price','v-image'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('v-docid').value = '';
+  document.getElementById('v-preview').classList.remove('show');
+  document.getElementById('vehicle-msg').innerHTML = '';
+  document.getElementById('vehicle-modal-title').textContent = docId ? 'Edit Vehicle' : 'Add Vehicle';
+  document.getElementById('vehicle-save-btn').textContent = 'Save Vehicle';
+  document.getElementById('vehicle-save-btn').disabled = false;
 
-async function editVehicle(docId) {
-  const snap = await db.collection('vehicles').doc(docId).get();
-  if (!snap.exists) return;
-  const v = snap.data();
-  document.getElementById('vehicle-modal-h').textContent = 'Edit Vehicle';
-  document.getElementById('v-id').value = docId;
-  document.getElementById('v-name').value = v.name || '';
-  document.getElementById('v-subtitle').value = v.subtitle || '';
-  document.getElementById('v-specs').value = Array.isArray(v.specs) ? v.specs.join(', ') : '';
-  document.getElementById('v-price').value = v.price || '';
-  document.getElementById('v-image').value = v.image || '';
-  document.getElementById('vehicle-save-msg').innerHTML = '';
-  setImgPreview('v-image', 'v-img-preview');
+  if (docId) {
+    const snap = await db.collection('vehicles').doc(docId).get();
+    if (!snap.exists) return;
+    const v = snap.data();
+    document.getElementById('v-docid').value   = docId;
+    document.getElementById('v-name').value    = v.name || '';
+    document.getElementById('v-subtitle').value= v.subtitle || '';
+    document.getElementById('v-specs').value   = Array.isArray(v.specs) ? v.specs.join(', ') : '';
+    document.getElementById('v-price').value   = v.price || '';
+    document.getElementById('v-image').value   = v.image || '';
+    if (v.image) {
+      document.getElementById('v-preview').querySelector('img').src = v.image;
+      document.getElementById('v-preview').classList.add('show');
+    }
+  }
   openModal('modal-vehicle');
 }
 
 async function saveVehicle() {
   const name = document.getElementById('v-name').value.trim();
-  if (!name) { showMsg('vehicle-save-msg', 'Vehicle name is required.', 'error'); return; }
+  if (!name) { flashMsg('vehicle-msg','Vehicle name is required.','error'); return; }
 
-  setBtnLoading('vehicle-save-btn', true);
-  const docId = document.getElementById('v-id').value;
+  setBtn('vehicle-save-btn','Saving…',true);
+  const docId = document.getElementById('v-docid').value;
   const data  = {
     name,
     subtitle : document.getElementById('v-subtitle').value.trim(),
-    specs    : document.getElementById('v-specs').value.split(',').map(s => s.trim()).filter(Boolean),
+    specs    : document.getElementById('v-specs').value.split(',').map(s=>s.trim()).filter(Boolean),
     price    : document.getElementById('v-price').value ? Number(document.getElementById('v-price').value) : null,
     image    : document.getElementById('v-image').value.trim()
   };
 
   try {
-    if (docId) { await db.collection('vehicles').doc(docId).set(data); }
-    else       { await db.collection('vehicles').add(data); }
+    if (docId) await db.collection('vehicles').doc(docId).set(data);
+    else       await db.collection('vehicles').add(data);
     closeModal('modal-vehicle');
-  } catch (e) {
-    showMsg('vehicle-save-msg', 'Error: ' + e.message, 'error');
+  } catch(e) {
+    flashMsg('vehicle-msg','Error: '+e.message,'error');
+    setBtn('vehicle-save-btn','Save Vehicle',false);
   }
-  setBtnLoading('vehicle-save-btn', false);
 }
 
-// ─────────────────────────────────────────────
-// Gallery — real-time
-// ─────────────────────────────────────────────
-function listenGalleryAdmin() {
+// ─────────────────────────────────
+// GALLERY — real-time listener + add/delete
+// ─────────────────────────────────
+function listenGallery() {
   db.collection('gallery').onSnapshot(snap => {
-    const el = document.getElementById('gallery-grid-admin');
-    if (snap.empty) { el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No images yet. Click "+ Add Image" to upload one.</p>'; return; }
-    let html = '<div class="admin-gallery-grid">';
+    const el = document.getElementById('gallery-body');
+    if (snap.empty) {
+      el.innerHTML = '<p style="color:var(--mid-grey);padding:16px 0;">No images yet. Click "+ Add Image" to add one.</p>';
+      return;
+    }
+    let h = '<div class="gal-grid">';
     snap.forEach(d => {
-      const { image } = d.data();
-      if (!image) return;
-      html += `<div class="admin-gallery-item">
-        <img src="${esc(image)}" alt="Gallery" loading="lazy" onerror="this.src='https://via.placeholder.com/200x110?text=Error'">
-        <div class="gal-footer">
-          <button class="action-btn del" onclick="del('gallery','${d.id}')">Remove</button>
+      const img = d.data().image;
+      if (!img) return;
+      h += `<div class="gal-item">
+        <img src="${x(img)}" loading="lazy" alt="Gallery image"
+             onerror="this.src='https://via.placeholder.com/200x110?text=Error'">
+        <div class="gal-item-foot">
+          <button class="action-btn del" onclick="del('gallery','${d.id}')">🗑 Remove</button>
         </div>
       </div>`;
     });
-    html += '</div>';
-    el.innerHTML = html;
-  }, () => { document.getElementById('gallery-grid-admin').innerHTML = '<p style="color:var(--mid-grey);">Could not load.</p>'; });
+    h += '</div>';
+    el.innerHTML = h;
+  });
 }
 
 function openGalleryModal() {
   document.getElementById('g-image').value = '';
-  document.getElementById('g-img-preview').classList.remove('show');
-  document.getElementById('gallery-save-msg').innerHTML = '';
+  document.getElementById('g-preview').classList.remove('show');
+  document.getElementById('gallery-msg').innerHTML = '';
+  document.getElementById('gallery-save-btn').textContent = 'Add to Gallery';
+  document.getElementById('gallery-save-btn').disabled = false;
   openModal('modal-gallery');
 }
 
 async function saveGalleryImage() {
   const image = document.getElementById('g-image').value.trim();
-  if (!image) { showMsg('gallery-save-msg', 'Please enter an image URL.', 'error'); return; }
+  if (!image) { flashMsg('gallery-msg','Please enter an image URL.','error'); return; }
+  setBtn('gallery-save-btn','Saving…',true);
   try {
     await db.collection('gallery').add({ image });
     closeModal('modal-gallery');
-  } catch (e) {
-    showMsg('gallery-save-msg', 'Error: ' + e.message, 'error');
+  } catch(e) {
+    flashMsg('gallery-msg','Error: '+e.message,'error');
+    setBtn('gallery-save-btn','Add to Gallery',false);
   }
 }
 
-// ─────────────────────────────────────────────
+// ─────────────────────────────────
 // Shared helpers
-// ─────────────────────────────────────────────
+// ─────────────────────────────────
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// Close modal on background click
+// Close modal when clicking outside
 document.querySelectorAll('.modal-overlay').forEach(o => {
   o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
 });
 
-async function del(collection, docId) {
+async function del(col, docId) {
   if (!confirm('Delete this item? This cannot be undone.')) return;
-  try { await db.collection(collection).doc(docId).delete(); }
-  catch (e) { alert('Error deleting: ' + e.message); }
+  try   { await db.collection(col).doc(docId).delete(); }
+  catch (e) { alert('Error: ' + e.message); }
 }
 
-function previewImg(inputId, previewId) {
-  setImgPreview(inputId, previewId);
-}
-function setImgPreview(inputId, previewId) {
+function livePreview(inputId, previewId) {
   const url = document.getElementById(inputId).value.trim();
   const box = document.getElementById(previewId);
   if (url) {
@@ -666,25 +711,29 @@ function setImgPreview(inputId, previewId) {
   }
 }
 
-function showMsg(elId, msg, type) {
-  document.getElementById(elId).innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : 'success'}" style="margin-top:10px;">${msg}</div>`;
+function flashMsg(elId, msg, type) {
+  document.getElementById(elId).innerHTML =
+    `<div class="alert alert-${type === 'error' ? 'error' : 'success'}" style="margin-top:10px;">${msg}</div>`;
 }
 
-function setBtnLoading(btnId, loading) {
-  const btn = document.getElementById(btnId);
+function setBtn(id, label, disabled) {
+  const btn = document.getElementById(id);
   if (!btn) return;
-  btn.disabled = loading;
-  btn.textContent = loading ? 'Saving…' : (btnId.includes('tour') ? 'Save Tour' : 'Save Vehicle');
+  btn.textContent = label;
+  btn.disabled    = disabled;
 }
 
-function esc(str) {
-  if (!str && str !== 0) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// Safe HTML escaping
+function x(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function fmtDate(ts) {
   if (!ts) return '—';
-  try { return ts.toDate().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }); }
+  try { return ts.toDate().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
   catch { return '—'; }
 }
 </script>

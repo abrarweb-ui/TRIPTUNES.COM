@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
 <div id="site-header"></div>
 
 <section class="page-hero">
@@ -25,28 +24,30 @@
       <p class="section-label">Kashmir Through Our Lens</p>
       <h2>Glimpses of the Valley</h2>
       <div class="divider centered"></div>
-      <p style="margin-top:14px;">A small collection of Kashmir's beauty — from the serenity of Dal Lake to the snow peaks of Gulmarg.</p>
+      <p style="margin-top:14px;">A collection of Kashmir's beauty — from the serenity of Dal Lake to the snow peaks of Gulmarg.</p>
     </div>
 
-    <!-- Firebase gallery renders here -->
-    <div id="firebase-gallery" class="gallery-grid" style="display:none;"></div>
+    <!-- Spinner -->
+    <div id="gal-loading" class="spinner-wrap"><div class="spinner"></div></div>
 
-    <!-- Static fallback — always visible when Firebase has no data -->
-    <div id="static-gallery" class="gallery-grid">
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1614799040700-0a6f1f5d4c0a?w=700&q=80" alt="Dal Lake Srinagar Kashmir houseboat" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1506461883276-594a12b5bca3?w=700&q=80" alt="Kashmir valley scenic mountains" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1624979413609-9eaf0f94e800?w=700&q=80" alt="Gulmarg meadows Kashmir" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1585531943718-89dc7bc34d45?w=700&q=80" alt="Pahalgam Lidder valley Kashmir" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1591135456609-8a8e855e7e67?w=700&q=80" alt="Tulip Garden Srinagar Kashmir spring" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Shikara ride Dal Lake Kashmir sunset" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=700&q=80" alt="Kashmir cab rental mountain road trip" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&q=80" alt="Hotel view Kashmir lake" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=700&q=80" alt="Group tour Kashmir travel" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=80" alt="Sonamarg glacier Kashmir mountains" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=700&q=80" alt="Kashmir nature travel landscape" loading="lazy"></div>
-      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=700&q=80" alt="Kashmir transport travel vehicle" loading="lazy"></div>
+    <!-- Firebase gallery -->
+    <div id="gal-grid" class="gallery-grid" style="display:none;"></div>
+
+    <!-- Offline fallback -->
+    <div id="gal-offline" class="gallery-grid" style="display:none;">
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1614799040700-0a6f1f5d4c0a?w=700&q=80" alt="Dal Lake houseboat" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1506461883276-594a12b5bca3?w=700&q=80" alt="Kashmir valley" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1624979413609-9eaf0f94e800?w=700&q=80" alt="Gulmarg meadows" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1585531943718-89dc7bc34d45?w=700&q=80" alt="Pahalgam valley" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1591135456609-8a8e855e7e67?w=700&q=80" alt="Tulip Garden Srinagar" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" alt="Shikara ride Dal Lake" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=700&q=80" alt="Cab rental Kashmir" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&q=80" alt="Hotel Kashmir" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=700&q=80" alt="Group tour Kashmir" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=80" alt="Sonamarg glacier" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=700&q=80" alt="Kashmir landscape" loading="lazy"></div>
+      <div class="gallery-item"><img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=700&q=80" alt="Kashmir travel" loading="lazy"></div>
     </div>
-
   </div>
 </section>
 
@@ -70,47 +71,48 @@
 <script src="js/partials.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const fbGrid     = document.getElementById('firebase-gallery');
-  const staticGrid = document.getElementById('static-gallery');
+  const loading = document.getElementById('gal-loading');
+  const grid    = document.getElementById('gal-grid');
+  const offline = document.getElementById('gal-offline');
 
   try {
-    // Real-time listener — gallery updates the moment admin adds/removes an image
     db.collection('gallery').onSnapshot(snap => {
+      loading.style.display = 'none';
+
       if (snap.empty) {
-        fbGrid.style.display     = 'none';
-        staticGrid.style.display = '';
+        offline.style.display = '';
+        grid.style.display    = 'none';
         return;
       }
 
-      fbGrid.innerHTML = '';
-      let validCount = 0;
+      grid.innerHTML = '';
+      let count = 0;
       snap.forEach(doc => {
         const { image } = doc.data();
-        if (image) {
-          validCount++;
-          const div = document.createElement('div');
-          div.className = 'gallery-item';
-          div.dataset.id = doc.id;
-          div.innerHTML = `<img src="${image}" alt="Kashmir travel photo" loading="lazy"
-                               onerror="this.parentElement.style.display='none'">`;
-          fbGrid.appendChild(div);
-        }
+        if (!image) return;
+        count++;
+        const div = document.createElement('div');
+        div.className = 'gallery-item';
+        div.innerHTML = `<img src="${image}" alt="Kashmir travel photo" loading="lazy"
+                              onerror="this.parentElement.style.display='none'">`;
+        grid.appendChild(div);
       });
 
-      if (validCount === 0) {
-        fbGrid.style.display     = 'none';
-        staticGrid.style.display = '';
+      if (count === 0) {
+        offline.style.display = '';
+        grid.style.display    = 'none';
       } else {
-        fbGrid.style.display     = '';
-        staticGrid.style.display = 'none';
+        grid.style.display    = '';
+        offline.style.display = 'none';
       }
     }, () => {
-      fbGrid.style.display     = 'none';
-      staticGrid.style.display = '';
+      loading.style.display = 'none';
+      offline.style.display = '';
+      grid.style.display    = 'none';
     });
   } catch (e) {
-    fbGrid.style.display     = 'none';
-    staticGrid.style.display = '';
+    loading.style.display = 'none';
+    offline.style.display = '';
   }
 });
 </script>

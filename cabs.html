@@ -6,22 +6,18 @@
   <title>Cab Rental Kashmir | Airport Pickup, Local & Outstation | Trip Tunes</title>
   <meta name="description" content="Book cab rental in Kashmir with Trip Tunes. Innova Crysta, Sedan, Tempo Traveller for airport pickup, local sightseeing, and outstation trips to Gulmarg, Pahalgam, Sonamarg.">
   <link rel="canonical" href="https://triptunes.com/cabs.html">
-  <meta property="og:title" content="Cab Rental Kashmir | Trip Tunes Tour and Travels">
-  <meta property="og:description" content="Reliable cabs in Kashmir for airport transfers, local sightseeing and outstation travel.">
-  <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .cab-services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:8px; }
-    .cab-service-item { padding:24px; border:1px solid var(--border); border-radius:6px; background:var(--white); }
-    .cab-service-item .icon { font-size:1.6rem; margin-bottom:12px; }
-    .cab-service-item h3 { font-size:1rem; margin-bottom:8px; }
-    .cab-service-item p { font-size:0.87rem; color:var(--mid-grey); }
-    @media(max-width:700px){ .cab-services-grid{grid-template-columns:1fr 1fr;} }
-    @media(max-width:460px){ .cab-services-grid{grid-template-columns:1fr;} }
+    .cab-services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+    .cab-service-item{padding:24px;border:1px solid var(--border);border-radius:6px;background:#fff;}
+    .cab-service-item .icon{font-size:1.6rem;margin-bottom:12px;}
+    .cab-service-item h3{font-size:1rem;margin-bottom:8px;}
+    .cab-service-item p{font-size:.87rem;color:var(--mid-grey);}
+    @media(max-width:700px){.cab-services-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:460px){.cab-services-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
-
 <div id="site-header"></div>
 
 <section class="page-hero">
@@ -37,7 +33,7 @@
       <p class="section-label">Transport Services</p>
       <h2>Clean Vehicles, Experienced Local Drivers</h2>
       <div class="divider"></div>
-      <p style="margin-top:12px;max-width:600px;">We offer a range of vehicles for every group size and budget. All our drivers are from Kashmir, know the roads well, and are available for airport transfers, city sightseeing, and multi-day outstation trips.</p>
+      <p style="margin-top:12px;max-width:600px;">We offer a range of vehicles for every group size and budget. All drivers are from Kashmir, know the roads well, and are available for airport transfers, city sightseeing, and multi-day outstation trips.</p>
     </div>
   </div>
 </section>
@@ -49,76 +45,19 @@
       <h2>Choose Your Vehicle</h2>
       <div class="divider"></div>
     </div>
-
-    <!-- Firebase vehicles render here -->
-    <div id="firebase-vehicles" class="grid-3" style="display:none;"></div>
-
-    <!-- Static defaults — always visible when Firebase has no data -->
-    <div id="static-vehicles" class="grid-3">
-      <div class="cab-card">
-        <img class="cab-card-img" src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=600&q=75" alt="Swift Dzire Sedan cab rental Kashmir" loading="lazy">
-        <div class="cab-card-body">
-          <h3>Swift Dzire / Sedan</h3>
-          <p>Comfortable for 1–4 passengers. Ideal for airport transfers and Srinagar city sightseeing.</p>
-          <div class="cab-specs"><span class="spec-tag">1–4 Passengers</span><span class="spec-tag">A/C</span><span class="spec-tag">Luggage Space</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:16px;width:100%;" onclick="whatsappInquiry('Swift Dzire Sedan')">Inquire on WhatsApp</button>
-        </div>
-      </div>
-
-      <div class="cab-card">
-        <img class="cab-card-img" src="https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=600&q=75" alt="Innova Crysta cab rental Kashmir family" loading="lazy">
-        <div class="cab-card-body">
-          <h3>Toyota Innova Crysta</h3>
-          <p>Most popular for families. Spacious, comfortable, and handles mountain roads well.</p>
-          <div class="cab-specs"><span class="spec-tag">5–7 Passengers</span><span class="spec-tag">A/C</span><span class="spec-tag">Mountain Ready</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:16px;width:100%;" onclick="whatsappInquiry('Innova Crysta')">Inquire on WhatsApp</button>
-        </div>
-      </div>
-
-      <div class="cab-card">
-        <img class="cab-card-img" src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=75" alt="Ertiga cab rental Kashmir" loading="lazy">
-        <div class="cab-card-body">
-          <h3>Maruti Ertiga</h3>
-          <p>A practical choice for small groups — more space than a sedan, economical for day trips.</p>
-          <div class="cab-specs"><span class="spec-tag">5–7 Passengers</span><span class="spec-tag">A/C</span><span class="spec-tag">Economy</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:16px;width:100%;" onclick="whatsappInquiry('Maruti Ertiga')">Inquire on WhatsApp</button>
-        </div>
-      </div>
-
-      <div class="cab-card">
-        <img class="cab-card-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=75" alt="Tempo Traveller group tour Kashmir" loading="lazy">
-        <div class="cab-card-body">
-          <h3>Tempo Traveller</h3>
-          <p>For groups of 9 to 14 passengers. Ideal for family gatherings, college trips, and group tours.</p>
-          <div class="cab-specs"><span class="spec-tag">9–14 Passengers</span><span class="spec-tag">A/C</span><span class="spec-tag">Group Travel</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:16px;width:100%;" onclick="whatsappInquiry('Tempo Traveller')">Inquire on WhatsApp</button>
-        </div>
-      </div>
-
-      <div class="cab-card">
-        <img class="cab-card-img" src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=75" alt="Mini coach bus large group Kashmir tour" loading="lazy">
-        <div class="cab-card-body">
-          <h3>Mini Coach / Bus</h3>
-          <p>For large group tours and corporate trips. We arrange mini coaches and full buses on request.</p>
-          <div class="cab-specs"><span class="spec-tag">15–40 Passengers</span><span class="spec-tag">A/C</span><span class="spec-tag">Large Groups</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:16px;width:100%;" onclick="whatsappInquiry('Mini Coach / Bus')">Inquire on WhatsApp</button>
-        </div>
-      </div>
-
-      <div class="cab-card" style="background:var(--off-white);">
-        <div class="cab-card-body" style="padding:28px 20px;">
-          <div style="font-size:2rem;margin-bottom:14px;">🚗</div>
-          <h3>Not Sure Which Vehicle?</h3>
-          <p>Tell us your group size and we will recommend the best vehicle for your trip and budget.</p>
-          <button class="btn btn-gold btn-sm" style="margin-top:20px;width:100%;" onclick="whatsappInquiry('Cab Rental')">WhatsApp Us</button>
-        </div>
-      </div>
+    <!-- Spinner -->
+    <div id="veh-loading" class="spinner-wrap"><div class="spinner"></div></div>
+    <!-- Firebase vehicles -->
+    <div id="veh-grid" class="grid-3" style="display:none;"></div>
+    <!-- Offline fallback -->
+    <div id="veh-offline" class="grid-3" style="display:none;">
+      <div class="cab-card"><img class="cab-card-img" src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=600&q=75" alt="Sedan" loading="lazy"><div class="cab-card-body"><h3>Swift Dzire / Sedan</h3><p>1–4 passengers. Ideal for airport transfers.</p><div class="cab-specs"><span class="spec-tag">1–4 Passengers</span><span class="spec-tag">A/C</span></div><button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Swift Dzire Sedan')">Inquire</button></div></div>
+      <div class="cab-card"><img class="cab-card-img" src="https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=600&q=75" alt="Innova" loading="lazy"><div class="cab-card-body"><h3>Toyota Innova Crysta</h3><p>5–7 passengers. Most popular for families.</p><div class="cab-specs"><span class="spec-tag">5–7 Passengers</span><span class="spec-tag">A/C</span></div><button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Innova Crysta')">Inquire</button></div></div>
+      <div class="cab-card"><img class="cab-card-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=75" alt="Tempo" loading="lazy"><div class="cab-card-body"><h3>Tempo Traveller</h3><p>9–14 passengers. Ideal for group tours.</p><div class="cab-specs"><span class="spec-tag">9–14 Passengers</span><span class="spec-tag">A/C</span></div><button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Tempo Traveller')">Inquire</button></div></div>
     </div>
-
   </div>
 </section>
 
-<!-- Cab Services -->
 <section class="section" style="background:var(--off-white);border-top:1px solid var(--border);">
   <div class="container">
     <div class="section-header centered">
@@ -127,35 +66,12 @@
       <div class="divider centered"></div>
     </div>
     <div class="cab-services-grid">
-      <div class="cab-service-item"><div class="icon">✈️</div><h3>Airport Pickup & Drop</h3><p>Available at Srinagar Airport at any hour. Share your flight details and we will have a driver ready when you land.</p></div>
+      <div class="cab-service-item"><div class="icon">✈️</div><h3>Airport Pickup & Drop</h3><p>Available at Srinagar Airport at any hour. Share your flight details and we will have a driver ready.</p></div>
       <div class="cab-service-item"><div class="icon">🏙️</div><h3>Srinagar Local Sightseeing</h3><p>Full-day or half-day sightseeing within Srinagar — Dal Lake, Mughal Gardens, Old City, Hazratbal, and more.</p></div>
-      <div class="cab-service-item"><div class="icon">🏔️</div><h3>Outstation Trips</h3><p>Day trips or overnight excursions to Gulmarg, Pahalgam, Sonamarg, Yusmarg, Bangus Valley, and beyond.</p></div>
+      <div class="cab-service-item"><div class="icon">🏔️</div><h3>Outstation Trips</h3><p>Day trips or overnight excursions to Gulmarg, Pahalgam, Sonamarg, Yusmarg, and beyond.</p></div>
       <div class="cab-service-item"><div class="icon">👨‍👩‍👧‍👦</div><h3>Family & Group Transport</h3><p>Larger vehicles for families and groups. Comfortable seating, enough luggage space, and a patient local driver.</p></div>
       <div class="cab-service-item"><div class="icon">📅</div><h3>Multi-Day Rental</h3><p>Book a vehicle with driver for the full duration of your Kashmir trip — the most convenient option for 3+ day tours.</p></div>
       <div class="cab-service-item"><div class="icon">🌙</div><h3>Night & Early Morning Trips</h3><p>Our drivers are available for early morning departures and late night arrivals. No surprise fees for odd hours.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <div class="why-grid">
-      <div>
-        <p class="section-label">Why Choose Our Cabs</p>
-        <h2>Reliable Transport You Can Count On</h2>
-        <div class="divider"></div>
-        <p style="margin-top:16px;">Every vehicle we send out is regularly maintained and cleaned. Every driver we work with is vetted and locally known.</p>
-        <div class="why-list" style="margin-top:22px;">
-          <div class="why-item"><div class="why-num">1</div><div><h4>Experienced Local Drivers</h4><p>Our drivers know Kashmir's mountain roads, seasonal road conditions, and the best routes to every destination.</p></div></div>
-          <div class="why-item"><div class="why-num">2</div><div><h4>Clean & Well-Maintained Vehicles</h4><p>Vehicles are serviced regularly and cleaned before each trip.</p></div></div>
-          <div class="why-item"><div class="why-num">3</div><div><h4>No Hidden Charges</h4><p>We quote the full price upfront. Tolls and parking are communicated in advance.</p></div></div>
-          <div class="why-item"><div class="why-num">4</div><div><h4>On-Call Support</h4><p>If any issue comes up during the trip, call us and we handle it. We are always reachable.</p></div></div>
-        </div>
-        <a href="contact.html" class="btn btn-primary" style="margin-top:24px;">Book a Cab</a>
-      </div>
-      <div class="why-img">
-        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=80" alt="Kashmir mountain road cab ride scenic route" loading="lazy">
-      </div>
     </div>
   </div>
 </section>
@@ -179,50 +95,55 @@
 <script src="js/firebase.js"></script>
 <script src="js/partials.js"></script>
 <script>
-const CAB_FALLBACK = 'https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=600&q=75';
-
-function buildVehicleCard(docId, v) {
-  const specs = Array.isArray(v.specs)
-    ? v.specs.map(s => `<span class="spec-tag">${s}</span>`).join('') : '';
-  const safeName = (v.name || '').replace(/'/g, "\\'");
-  return `
-    <div class="cab-card" data-id="${docId}">
-      <img class="cab-card-img" src="${v.image || CAB_FALLBACK}"
-           alt="${v.name} cab rental Kashmir" loading="lazy"
-           onerror="this.src='${CAB_FALLBACK}'">
-      <div class="cab-card-body">
-        <h3>${v.name || ''}</h3>
-        <p>${v.subtitle || ''}</p>
-        <div class="cab-specs">${specs}</div>
-        ${v.price ? `<p style="margin-top:10px;font-weight:600;color:var(--deep-blue);font-size:0.9rem;">From &#8377;${v.price}/day</p>` : ''}
-        <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;"
-                onclick="whatsappInquiry('${safeName}')">Inquire on WhatsApp</button>
-      </div>
-    </div>`;
-}
+const CAB_FB = 'https://images.unsplash.com/photo-1609710228159-0fa9bd7c0827?w=600&q=75';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const fbGrid     = document.getElementById('firebase-vehicles');
-  const staticGrid = document.getElementById('static-vehicles');
+  const loading = document.getElementById('veh-loading');
+  const grid    = document.getElementById('veh-grid');
+  const offline = document.getElementById('veh-offline');
 
   try {
     db.collection('vehicles').orderBy('name').onSnapshot(snap => {
+      loading.style.display = 'none';
+
       if (snap.empty) {
-        fbGrid.style.display     = 'none';
-        staticGrid.style.display = '';
+        offline.style.display = '';
+        grid.style.display    = 'none';
         return;
       }
-      fbGrid.innerHTML = '';
-      snap.forEach(doc => { fbGrid.innerHTML += buildVehicleCard(doc.id, doc.data()); });
-      fbGrid.style.display     = '';
-      staticGrid.style.display = 'none';
+
+      grid.innerHTML = '';
+      snap.forEach(doc => {
+        const v    = doc.data();
+        const sn   = (v.name||'').replace(/'/g,"\\'");
+        const tags = Array.isArray(v.specs)
+          ? v.specs.map(s=>`<span class="spec-tag">${s}</span>`).join('') : '';
+        grid.innerHTML += `
+          <div class="cab-card">
+            <img class="cab-card-img" src="${v.image||CAB_FB}"
+                 alt="${v.name||''} cab rental Kashmir" loading="lazy"
+                 onerror="this.src='${CAB_FB}'">
+            <div class="cab-card-body">
+              <h3>${v.name||''}</h3>
+              <p>${v.subtitle||''}</p>
+              <div class="cab-specs">${tags}</div>
+              ${v.price ? `<p style="margin-top:10px;font-weight:600;color:var(--deep-blue);font-size:.9rem;">From &#8377;${v.price}/day</p>` : ''}
+              <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;"
+                      onclick="whatsappInquiry('${sn}')">Inquire on WhatsApp</button>
+            </div>
+          </div>`;
+      });
+
+      grid.style.display    = '';
+      offline.style.display = 'none';
     }, () => {
-      fbGrid.style.display     = 'none';
-      staticGrid.style.display = '';
+      loading.style.display = 'none';
+      offline.style.display = '';
+      grid.style.display    = 'none';
     });
   } catch (e) {
-    fbGrid.style.display     = 'none';
-    staticGrid.style.display = '';
+    loading.style.display = 'none';
+    offline.style.display = '';
   }
 });
 </script>

@@ -35,92 +35,45 @@
 
 <section class="section">
   <div class="container">
-
-    <!-- Firebase data renders here; hidden until loaded -->
-    <div id="firebase-tours" class="grid-3" style="display:none;"></div>
-
-    <!-- Static defaults — visible until Firebase has its own data -->
-    <div id="static-tours" class="grid-3">
+    <!-- Loading spinner -->
+    <div id="tours-loading" class="spinner-wrap"><div class="spinner"></div></div>
+    <!-- Cards injected here by Firebase -->
+    <div id="tours-grid" class="grid-3" style="display:none;"></div>
+    <!-- Shown only if Firebase completely fails -->
+    <div id="tours-offline" style="display:none;" class="grid-3">
       <div class="card tour-card">
         <span class="highlight-tag">Popular</span>
         <img class="card-img" src="https://images.unsplash.com/photo-1591135456609-8a8e855e7e67?w=600&q=75" alt="Family Kashmir Package" loading="lazy">
         <div class="card-body">
           <h3>Family Kashmir Package</h3>
           <p>A balanced 6-night itinerary covering Srinagar, Gulmarg, and Pahalgam — paced for families with children and elderly members.</p>
-          <ul class="highlights-list"><li>Dal Lake Shikara ride</li><li>Gulmarg Gondola</li><li>Pahalgam valley</li><li>Mughal Gardens</li><li>Houseboat stay</li></ul>
+          <ul class="highlights-list"><li>Dal Lake Shikara ride</li><li>Gulmarg Gondola</li><li>Pahalgam valley</li><li>Mughal Gardens</li></ul>
           <div class="card-meta"><span class="badge">6 Nights / 7 Days</span><span class="badge badge-gold">Family</span></div>
           <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Family Kashmir Package')">Inquire on WhatsApp</button>
         </div>
       </div>
-
       <div class="card tour-card">
         <span class="highlight-tag" style="background:var(--deep-blue);">Honeymoon</span>
         <img class="card-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=75" alt="Honeymoon Package Kashmir" loading="lazy">
         <div class="card-body">
           <h3>Kashmir Honeymoon Package</h3>
           <p>Romantic Kashmir for newlyweds — private Shikara rides, scenic stays, and carefully selected experiences for couples.</p>
-          <ul class="highlights-list"><li>Houseboat on Dal Lake</li><li>Private Shikara at sunset</li><li>Sonamarg day trip</li><li>Rose & Tulip Garden visits</li></ul>
+          <ul class="highlights-list"><li>Houseboat on Dal Lake</li><li>Private Shikara at sunset</li><li>Sonamarg day trip</li></ul>
           <div class="card-meta"><span class="badge">4 Nights / 5 Days</span><span class="badge badge-gold">Couple</span></div>
           <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Kashmir Honeymoon Package')">Inquire on WhatsApp</button>
         </div>
       </div>
-
       <div class="card tour-card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1614799040700-0a6f1f5d4c0a?w=600&q=75" alt="Srinagar Local Tour" loading="lazy">
-        <div class="card-body">
-          <h3>Srinagar Local Tour</h3>
-          <p>A focused Srinagar itinerary covering Dal Lake, the Old City, Mughal Gardens, and local market areas at a relaxed pace.</p>
-          <ul class="highlights-list"><li>Dal Lake Shikara ride</li><li>Nishat & Shalimar Bagh</li><li>Hazratbal Shrine</li><li>Lal Chowk and Old City</li></ul>
-          <div class="card-meta"><span class="badge">2 Nights / 3 Days</span><span class="badge badge-gold">Srinagar</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Srinagar Local Tour')">Inquire on WhatsApp</button>
-        </div>
-      </div>
-
-      <div class="card tour-card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1624979413609-9eaf0f94e800?w=600&q=75" alt="Gulmarg Tour Package" loading="lazy">
+        <img class="card-img" src="https://images.unsplash.com/photo-1624979413609-9eaf0f94e800?w=600&q=75" alt="Gulmarg Tour" loading="lazy">
         <div class="card-body">
           <h3>Gulmarg Tour</h3>
           <p>The meadow of flowers — highest gondola in Asia, snow-covered slopes in winter, and lush green meadows in summer.</p>
-          <ul class="highlights-list"><li>Gondola Phase 1 & 2</li><li>Khilanmarg meadow walk</li><li>Snow activities in winter</li><li>Golf course visit</li></ul>
+          <ul class="highlights-list"><li>Gondola Phase 1 & 2</li><li>Khilanmarg meadow walk</li><li>Snow activities in winter</li></ul>
           <div class="card-meta"><span class="badge">2 Nights / 3 Days</span><span class="badge badge-gold">Gulmarg</span></div>
           <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Gulmarg Tour')">Inquire on WhatsApp</button>
         </div>
       </div>
-
-      <div class="card tour-card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1585531943718-89dc7bc34d45?w=600&q=75" alt="Pahalgam Tour Package" loading="lazy">
-        <div class="card-body">
-          <h3>Pahalgam Tour</h3>
-          <p>Valley of Shepherds — serene destinations with rivers, forests, and open meadows.</p>
-          <ul class="highlights-list"><li>Betaab Valley</li><li>Aru Valley walk</li><li>Baisaran meadows</li><li>Lidder river horseback rides</li></ul>
-          <div class="card-meta"><span class="badge">2 Nights / 3 Days</span><span class="badge badge-gold">Pahalgam</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Pahalgam Tour')">Inquire on WhatsApp</button>
-        </div>
-      </div>
-
-      <div class="card tour-card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1506461883276-594a12b5bca3?w=600&q=75" alt="Sonamarg Tour Package" loading="lazy">
-        <div class="card-body">
-          <h3>Sonamarg Tour</h3>
-          <p>Meadow of Gold — gateway to the Himalayas with glacier views and breathtaking mountain scenery.</p>
-          <ul class="highlights-list"><li>Thajiwas Glacier visit</li><li>Sindh river ponies</li><li>Vishansar Lake (optional)</li><li>Zoji La Pass view</li></ul>
-          <div class="card-meta"><span class="badge">1 Night / 2 Days</span><span class="badge badge-gold">Sonamarg</span></div>
-          <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Sonamarg Tour')">Inquire on WhatsApp</button>
-        </div>
-      </div>
-
-      <div class="card tour-card">
-        <img class="card-img" src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=75" alt="Custom Kashmir Package" loading="lazy">
-        <div class="card-body">
-          <h3>Custom Package</h3>
-          <p>Cannot find what you need? Tell us your travel dates, group size, and budget — we will design an itinerary specifically for you.</p>
-          <ul class="highlights-list"><li>Any combination of destinations</li><li>Your own schedule and pace</li><li>Budget or premium options</li><li>Solo, couple, or large group</li></ul>
-          <div class="card-meta"><span class="badge">Flexible Duration</span><span class="badge badge-gold">Custom</span></div>
-          <button class="btn btn-gold btn-sm" style="margin-top:14px;width:100%;" onclick="whatsappInquiry('Custom Kashmir Package')">Discuss Your Trip</button>
-        </div>
-      </div>
     </div>
-
   </div>
 </section>
 
@@ -133,7 +86,7 @@
         <div class="divider"></div>
         <p style="margin-top:16px;">Our packages are quoted on a per-person basis and include accommodation, transport, and listed activities.</p>
         <div style="margin-top:22px;">
-          <h3 style="font-size:0.95rem;margin-bottom:12px;">Usually Included</h3>
+          <h3 style="font-size:.95rem;margin-bottom:12px;">Usually Included</h3>
           <ul class="highlights-list">
             <li>Accommodation (budget/deluxe/premium based on package)</li>
             <li>Private cab transport throughout the trip</li>
@@ -143,7 +96,7 @@
           </ul>
         </div>
         <div style="margin-top:18px;">
-          <h3 style="font-size:0.95rem;margin-bottom:12px;">Usually Not Included</h3>
+          <h3 style="font-size:.95rem;margin-bottom:12px;">Usually Not Included</h3>
           <ul class="highlights-list">
             <li>Gondola tickets (Gulmarg)</li>
             <li>Personal shopping or meals unless specified</li>
@@ -181,61 +134,61 @@
 <script src="js/firebase.js"></script>
 <script src="js/partials.js"></script>
 <script>
-const FALLBACK_IMG = 'https://images.unsplash.com/photo-1591135456609-8a8e855e7e67?w=600&q=75';
+const FB = 'https://images.unsplash.com/photo-1591135456609-8a8e855e7e67?w=600&q=75';
 
-function buildTourCard(docId, t) {
-  const featured   = t.featured ? '<span class="highlight-tag">Featured</span>' : '';
-  const highlights = Array.isArray(t.highlights) ? t.highlights.map(h => `<li>${h}</li>`).join('') : '';
-  const safeName   = (t.name || '').replace(/'/g, "\\'");
-  return `
-    <div class="card tour-card" data-id="${docId}">
-      ${featured}
-      <img class="card-img" src="${t.image || FALLBACK_IMG}"
-           alt="${t.name} Kashmir tour package" loading="lazy"
-           onerror="this.src='${FALLBACK_IMG}'">
-      <div class="card-body">
-        <h3>${t.name || ''}</h3>
-        <p>${t.description || ''}</p>
-        <ul class="highlights-list">${highlights}</ul>
-        <div class="card-meta">
-          <div class="price-tag">
-            ${t.price ? '&#8377;' + t.price : 'Contact for Price'}
-            <small>/ person</small>
-          </div>
-          <span class="badge">${t.duration || ''}</span>
-        </div>
-        <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;"
-                onclick="whatsappInquiry('${safeName}')">
-          Inquire on WhatsApp
-        </button>
-      </div>
-    </div>`;
-}
-
-// onSnapshot = real-time — any admin change reflects immediately
 document.addEventListener('DOMContentLoaded', () => {
-  const fbGrid     = document.getElementById('firebase-tours');
-  const staticGrid = document.getElementById('static-tours');
+  const loading = document.getElementById('tours-loading');
+  const grid    = document.getElementById('tours-grid');
+  const offline = document.getElementById('tours-offline');
 
   try {
+    // Real-time listener — reflects admin edits instantly
     db.collection('tours').orderBy('name').onSnapshot(snap => {
+      loading.style.display = 'none';
+
       if (snap.empty) {
-        fbGrid.style.display     = 'none';
-        staticGrid.style.display = '';
+        // Firebase connected but no data yet
+        offline.style.display = '';
+        grid.style.display    = 'none';
         return;
       }
-      fbGrid.innerHTML = '';
-      snap.forEach(doc => { fbGrid.innerHTML += buildTourCard(doc.id, doc.data()); });
-      fbGrid.style.display     = '';
-      staticGrid.style.display = 'none';
+
+      grid.innerHTML = '';
+      snap.forEach(doc => {
+        const t   = doc.data();
+        const hl  = Array.isArray(t.highlights) ? t.highlights.map(h => `<li>${h}</li>`).join('') : '';
+        const tag = t.featured ? '<span class="highlight-tag">Featured</span>' : '';
+        const sn  = (t.name||'').replace(/'/g,"\\'");
+        grid.innerHTML += `
+          <div class="card tour-card">
+            ${tag}
+            <img class="card-img" src="${t.image||FB}" alt="${t.name||''} Kashmir tour package"
+                 loading="lazy" onerror="this.src='${FB}'">
+            <div class="card-body">
+              <h3>${t.name||''}</h3>
+              <p>${t.description||''}</p>
+              <ul class="highlights-list">${hl}</ul>
+              <div class="card-meta">
+                <div class="price-tag">${t.price ? '&#8377;'+t.price : 'Contact for Price'} <small>/ person</small></div>
+                <span class="badge">${t.duration||''}</span>
+              </div>
+              <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%;"
+                      onclick="whatsappInquiry('${sn}')">Inquire on WhatsApp</button>
+            </div>
+          </div>`;
+      });
+
+      grid.style.display    = '';
+      offline.style.display = 'none';
     }, () => {
-      // Firestore error / not configured → keep static visible
-      fbGrid.style.display     = 'none';
-      staticGrid.style.display = '';
+      // Firestore error — show minimal offline fallback
+      loading.style.display = 'none';
+      offline.style.display = '';
+      grid.style.display    = 'none';
     });
   } catch (e) {
-    fbGrid.style.display     = 'none';
-    staticGrid.style.display = '';
+    loading.style.display = 'none';
+    offline.style.display = '';
   }
 });
 </script>
