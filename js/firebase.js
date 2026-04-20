@@ -211,10 +211,15 @@ async function submitInquiry(name, phone, message, packageName) {
 // Mobile nav toggle
 document.addEventListener('DOMContentLoaded', function () {
   const toggle = document.querySelector('.nav-toggle');
-  const nav    = document.querySelector('.main-nav');
+  const nav = document.querySelector('.main-nav');
+
   if (toggle && nav) {
-    toggle.addEventListener('click', () => nav.classList.toggle('open'));
+    toggle.addEventListener('click', () => {
+      nav.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
   }
+});
 
   // Active nav link highlight
   const links       = document.querySelectorAll('.main-nav a');
