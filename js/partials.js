@@ -49,7 +49,7 @@ const SITE_FOOTER = `
             <span class="logo-tagline">Your Trusted Travel Partner</span>
           </div>
         </div>
-        <p itemprop="description">A locally trusted travel agency in Budgam, Srinagar, offering Kashmir tour packages, houseboat bookings, hotel reservations, and cab rentals for families, couples, and groups.</p>
+        <p itemprop="description">A locally trusted travel agency in Budgam, near Srinagar, offering Kashmir tour packages, houseboat bookings, hotel reservations, and cab rentals for families, couples, and groups.</p>
       </div>
       <div class="footer-col">
         <h4>Quick Links</h4>
@@ -82,7 +82,7 @@ const SITE_FOOTER = `
             <span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
               <strong>Address</strong>
               <span itemprop="streetAddress">Safvi Galleria, New Bus Stand Budgam</span>,
-              <span itemprop="addressLocality">Srinagar</span>,
+              <span itemprop="addressLocality">near Srinagar</span>,
               <span itemprop="addressRegion">Jammu & Kashmir</span>,
               <span itemprop="addressCountry">India</span>
             </span>
