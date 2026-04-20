@@ -199,28 +199,43 @@ p { font-size: 1rem; color: var(--body-text); }
 /* Mobile Nav */
 @media (max-width: 900px) {
   .main-nav {
-    display: none;
+    display: flex;
+    flex-direction: column;
     position: absolute;
     top: 70px;
     left: 0;
     right: 0;
     background: var(--white);
     border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    flex-direction: column;
-    align-items: flex-start;
     padding: 16px 24px;
     gap: 2px;
-    box-shadow: var(--shadow);
-  }
-  .main-nav.open { display: flex; }
-  .main-nav a { padding: 9px 0; font-size: 0.95rem; width: 100%; border-bottom: 1px solid var(--light-grey); }
-  .main-nav a:last-child { border-bottom: none; }
-  .nav-toggle { display: flex; }
-  .header-phone { display: none; }
-  .header-cta .btn { display: none; }
-}
 
+    /* hidden by default */
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.25s ease;
+  }
+
+  .main-nav.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .main-nav a {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--light-grey);
+  }
+
+  .main-nav a:last-child {
+    border-bottom: none;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+}
 /* ============================================
    HERO
    ============================================ */
