@@ -4,7 +4,7 @@
 // Firebase Console → Project Settings → Your Apps → Web App
 // ============================================================
 const firebaseConfig = {
-   apiKey: "AIzaSyCM2wosAREF5gwtt3tXc-FhO9oA9Jv6Zy0",
+ apiKey: "AIzaSyCM2wosAREF5gwtt3tXc-FhO9oA9Jv6Zy0",
   authDomain: "entrty-data.firebaseapp.com",
   projectId: "entrty-data",
   storageBucket: "entrty-data.firebasestorage.app",
