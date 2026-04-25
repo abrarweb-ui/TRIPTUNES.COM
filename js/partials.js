@@ -123,17 +123,22 @@ const SITE_FOOTER = `
 </a>
 `;
 
-// Inject header and footer
+// Inject header, footer, and activate nav toggle
 document.addEventListener('DOMContentLoaded', function () {
   const headerEl = document.getElementById('site-header');
   const footerEl = document.getElementById('site-footer');
+
   if (headerEl) headerEl.outerHTML = SITE_NAV;
   if (footerEl) footerEl.outerHTML = SITE_FOOTER;
-});
+
+  // ✅ Wait until DOM updates
   const navToggle = document.querySelector('.nav-toggle');
   const navMenu = document.querySelector('.main-nav');
 
-  navToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    navToggle.classList.toggle('active');
-  });
+  if (navToggle && navMenu) {
+    navToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      navToggle.classList.toggle('active');
+    });
+  }
+});
