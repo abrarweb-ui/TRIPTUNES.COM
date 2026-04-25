@@ -130,3 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (headerEl) headerEl.outerHTML = SITE_NAV;
   if (footerEl) footerEl.outerHTML = SITE_FOOTER;
 });
+  const navToggle = document.querySelector('.nav-toggle');
+  const navMenu = document.querySelector('.main-nav');
+
+  navToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    navToggle.classList.toggle('active');
+  });
