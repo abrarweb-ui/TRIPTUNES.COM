@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 
-Sitemap: https://triptunes.com/sitemap.xml
+Sitemap: https://triptunes5.com/sitemap.xml
